@@ -1,0 +1,11 @@
+{
+    "semi": false,
+    "printWidth": 160,
+    "endOfLine": "lf",
+    "arrowParens": "always",
+    "bracketSpacing": true,
+    "quoteProps": "consistent",
+    "singleAttributePerLine": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+}
