@@ -1,11 +1,11 @@
-import { COLORS } from '@assets/styles/theme.ts'
-import { DescriptorFile } from '@eu4/folders.ts'
-import { itemCategories } from '@eu4/items.ts'
-import { Descriptor } from '@eu4/types.ts'
-import { ArrowDropDown } from '@mui/icons-material'
-import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, Grid2, Typography } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { COLORS } from '@assets/styles/theme.ts';
+import { DescriptorFile } from '@eu4/folders.ts';
+import { itemCategories } from '@eu4/items.ts';
+import { Descriptor } from '@eu4/types.ts';
+import { ArrowDropDown } from '@mui/icons-material';
+import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, Grid2, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   handle: FileSystemDirectoryHandle,

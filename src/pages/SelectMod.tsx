@@ -1,8 +1,8 @@
-import { COLORS } from '@assets/styles/theme.ts'
-import { Alert, AlertTitle, Box, Button, Container, Typography } from '@mui/material'
-import { ModHomePage } from '@pages/ModHome.tsx'
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { COLORS } from '@assets/styles/theme.ts';
+import { Alert, AlertTitle, Box, Button, Typography } from '@mui/material';
+import { ModHomePage } from '@pages/ModHome.tsx';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 enum Error {
   EMPTY = 'EMPTY',

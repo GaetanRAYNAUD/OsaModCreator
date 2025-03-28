@@ -1,7 +1,7 @@
-import { Box, Button, Container, Typography } from '@mui/material'
-import { getRoutes } from '@routes.ts'
-import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { Box, Button, Typography } from '@mui/material';
+import { getRoutes } from '@routes.ts';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
 
 export function CreateModPage() {
   const { t } = useTranslation()

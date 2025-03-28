@@ -1,5 +1,5 @@
-import { readFile } from '@eu4/eu4file.util.ts'
-import { AdvisorTypes, Descriptor } from '@eu4/types.ts'
+import { readFile } from '@eu4/eu4file.util.ts';
+import { AdvisorTypes, Descriptor } from '@eu4/types.ts';
 
 export class Eu4Folder<T> {
   name: string

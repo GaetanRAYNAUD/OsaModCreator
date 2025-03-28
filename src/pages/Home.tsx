@@ -1,7 +1,7 @@
-import { Avatar, Box, Button, Card, CardActions, CardContent, Typography } from '@mui/material'
-import { getRoutes } from '@routes'
-import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { Avatar, Box, Button, Card, CardActions, CardContent, Typography } from '@mui/material';
+import { getRoutes } from '@routes';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 export function HomePage() {
   const navigate = useNavigate()

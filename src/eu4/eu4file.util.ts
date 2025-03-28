@@ -1,4 +1,4 @@
-import { Jomini, Query, Writer } from 'jomini'
+import { Jomini, Query, Writer } from 'jomini';
 
 const jomini = await Jomini.initialize()
 

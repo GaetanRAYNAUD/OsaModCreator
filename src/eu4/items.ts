@@ -1,4 +1,4 @@
-import { DescriptorFile, Eu4File, Eu4Folder } from '@eu4/folders.ts'
+import { DescriptorFile, Eu4File, Eu4Folder } from '@eu4/folders.ts';
 
 export type ItemCategory = {
   name: string;

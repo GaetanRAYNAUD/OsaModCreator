@@ -1,5 +1,5 @@
-import { createTheme, responsiveFontSizes } from '@mui/material'
-import React from 'react'
+import { createTheme, responsiveFontSizes } from '@mui/material';
+import React from 'react';
 
 export enum COLORS {
   PRIMARY_MAIN = '#242424',
