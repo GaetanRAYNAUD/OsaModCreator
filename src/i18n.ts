@@ -48,88 +48,188 @@ i18n.use(initReactI18next).init({
             'title': 'Mod',
             'descriptor': {
               'title': 'Description',
-              'desc': 'Mod description, like name, tags, ect..',
+              'desc': 'Mod description, name, tags, ect..',
             },
           },
           'common': {
             'title': 'Miscellaneous',
             'advisors': {
               'title': 'Advisors',
+              'desc': 'Advisors types',
             },
             'countries': {
               'title': 'Countries',
+              'desc': 'List of countries with misc information, rulers names, units names, etc..',
             },
             'events': {
               'title': 'Events',
+              'desc': 'List of events, conditions, effects, etc..',
             },
             'decisions': {
               'title': 'Decisions',
+              'desc': 'List of decisions, conditions, preconditions, effects, etc..',
             },
             'missions': {
               'title': 'Missions',
+              'desc': 'List of missions, conditions, effects, etc..',
             },
             'technologies': {
               'title': 'Technologies',
+              'desc': 'Technologies levels and the bonuses they gives',
             },
             'units': {
               'title': 'Units',
+              'desc': 'Units types, stats, technologies groups',
             },
             'institutions': {
               'title': 'Institutions',
+              'desc': 'Institutions, bonuses, dates, etc..',
             },
           },
           'economy': {
             'title': 'Economy',
             'buildings': {
               'title': 'Buildings',
+              'desc': 'List of buildings with cost and effects',
             },
             'trade_goods': {
               'title': 'Trade goods',
+              'desc': 'List of trades goods and trading in bonuses',
             },
             'prices': {
               'title': 'Trade goods prices',
+              'desc': 'Prices of trade goods',
             },
             'great_projects': {
               'title': 'Great projects',
+              'desc': 'Great projects with cost, effects and location',
             },
             'trade_nodes': {
               'title': 'Trade nodes',
+              'desc': 'Trade nodes with connections between them and province members',
             },
             'trade_companies': {
               'title': 'Trade companies',
+              'desc': 'Trade companies and province members'
             },
             'colonial_regions': {
               'title': 'Colonial regions',
+              'desc': 'Colonials regions with province members and properties of the provinces'
             },
           },
           'government': {
             'title': 'Government',
+            'governments': {
+              'title': 'Governments',
+              'desc': 'Governments types',
+            },
+            'government_reforms': {
+              'title': 'Governments reforms',
+              'desc': 'Governments reforms',
+            },
             'cultures': {
               'title': 'Cultures',
+              'desc': 'Cultures and cultural groups',
+            },
+            'ideas': {
+              'title': 'Ideas',
+              'desc': 'Idea groups and national ideas',
+            },
+            'policies': {
+              'title': 'Policies',
+              'desc': 'Policies types and ideas groups required',
+            },
+            'custom_ideas': {
+              'title': 'Custom ideas',
+              'desc': 'Idea available for custom countries',
+            },
+            'disasters': {
+              'title': 'Disasters',
+              'desc': 'Disasters with requirements and effects',
+            },
+            'estates': {
+              'title': 'Estates',
+              'desc': 'List of estates and privileges',
+            },
+            'factions': {
+              'title': 'Factions',
+              'desc': 'Factions for eligible governments',
+            },
+            'parliament_issues': {
+              'title': 'Parliament Issues',
+              'desc': 'List of parliament issues possible',
+            },
+            'parliament_bribes': {
+              'title': 'Parliament Bribes',
+              'desc': 'List of parliament bribes possible to help passing issues',
             },
           },
           'diplomacy': {
             'title': 'Diplomacy',
+            'cb': {
+              'title': 'Casus Bellis',
+            },
+            'war_goals': {
+              'title': 'War goals',
+              'desc': 'War goals for Casus Bellis',
+            },
+            'diplomatic_actions': {
+              'title': 'Diplomatic actions',
+              'desc': 'List of possible diplomatic actions and there conditions',
+            },
           },
           'religion': {
             'title': 'Religion',
+            'religions': {
+              'title': 'Religions',
+              'desc': 'Religions and religion groups',
+            },
+            'church_aspects': {
+              'title': 'Church aspects',
+              'desc': 'Church aspects for eligible religions',
+            },
+            'fervor': {
+              'title': 'Fervor',
+              'desc': 'Fervor for eligible religions',
+            },
+            'fetishist_cults': {
+              'title': 'Fetishist cults',
+              'desc': 'Fetishist cults for eligible religions',
+            },
+            'personal_deities': {
+              'title': 'Personal deities',
+              'desc': 'Personal deities for eligible religions',
+            },
+            'religious_reforms': {
+              'title': 'Religious reforms',
+              'desc': 'Religious reforms for eligible religions',
+            },
           },
           'history': {
             'title': 'History',
-            'country': {
+            'bookmarks': {
+              'title': 'Bookmarks',
+              'desc': 'Bookmarks that are available at the start of a game with suggested countries',
+            },
+            'countries': {
               'title': 'Countries',
+              'desc': 'History of countries with technological group, religion, culture, etc..'
             },
-            'province': {
+            'provinces': {
               'title': 'Provinces',
+              'desc': 'History of provinces, who owned it, the religion, culture, etc..',
             },
-            'advisor': {
+            'advisors': {
               'title': 'Advisors',
+              'desc': 'Historical advisors'
             },
-            'war': {
+            'wars': {
               'title': 'Wars',
+              'desc': 'Historical wars with dates, attackers and defenders',
             },
             'diplomacy': {
               'title': 'Diplomacy',
+              'desc': 'History of alliances, vassals, etc..'
             },
           },
         },
@@ -166,6 +266,6 @@ i18n.use(initReactI18next).init({
   interpolation: {
     escapeValue: false,
   },
-})
+});
 
-export default i18n
+export default i18n;

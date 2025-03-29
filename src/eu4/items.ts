@@ -61,25 +61,27 @@ export const itemCategories: ItemCategory[] = [
   {
     name: 'government',
     items: [{
+      name: 'governments',
+    }, {
+      name: 'government_reforms',
+    }, {
       name: 'cultures',
     }, {
       name: 'ideas',
     }, {
       name: 'policies',
     }, {
+      name: 'custom_ideas',
+    }, {
       name: 'disasters',
     }, {
       name: 'estates',
-    }, {
-      name: 'governments',
     }, {
       name: 'factions',
     }, {
       name: 'parliament_issues',
     }, {
       name: 'parliament_bribes',
-    }, {
-      name: 'custom_ideas',
     }],
   },
   {
@@ -87,9 +89,9 @@ export const itemCategories: ItemCategory[] = [
     items: [{
       name: 'cb',
     }, {
-      name: 'diplomatic_actions',
-    }, {
       name: 'war_goals',
+    }, {
+      name: 'diplomatic_actions',
     }],
   },
   {
@@ -124,4 +126,4 @@ export const itemCategories: ItemCategory[] = [
       name: 'wars',
     }],
   },
-]
+];
