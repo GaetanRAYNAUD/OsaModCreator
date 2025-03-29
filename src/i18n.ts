@@ -42,6 +42,7 @@ i18n.use(initReactI18next).init({
         'routes': {
           'mod': 'mod',
           'create_mod': 'create-a-mod',
+          'descriptor': 'descriptor',
         },
         'category': {
           'main': {
@@ -110,11 +111,11 @@ i18n.use(initReactI18next).init({
             },
             'trade_companies': {
               'title': 'Trade companies',
-              'desc': 'Trade companies and province members'
+              'desc': 'Trade companies and province members',
             },
             'colonial_regions': {
               'title': 'Colonial regions',
-              'desc': 'Colonials regions with province members and properties of the provinces'
+              'desc': 'Colonials regions with province members and properties of the provinces',
             },
           },
           'government': {
@@ -168,6 +169,7 @@ i18n.use(initReactI18next).init({
             'title': 'Diplomacy',
             'cb': {
               'title': 'Casus Bellis',
+              'desc': '',
             },
             'war_goals': {
               'title': 'War goals',
@@ -213,7 +215,7 @@ i18n.use(initReactI18next).init({
             },
             'countries': {
               'title': 'Countries',
-              'desc': 'History of countries with technological group, religion, culture, etc..'
+              'desc': 'History of countries with technological group, religion, culture, etc..',
             },
             'provinces': {
               'title': 'Provinces',
@@ -221,7 +223,7 @@ i18n.use(initReactI18next).init({
             },
             'advisors': {
               'title': 'Advisors',
-              'desc': 'Historical advisors'
+              'desc': 'Historical advisors',
             },
             'wars': {
               'title': 'Wars',
@@ -229,7 +231,7 @@ i18n.use(initReactI18next).init({
             },
             'diplomacy': {
               'title': 'Diplomacy',
-              'desc': 'History of alliances, vassals, etc..'
+              'desc': 'History of alliances, vassals, etc..',
             },
           },
         },

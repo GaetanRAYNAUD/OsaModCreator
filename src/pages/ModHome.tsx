@@ -18,6 +18,8 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AbsoluteLoader from '@components/AbsoluteLoader.tsx';
+import { getRoutes } from '@routes';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   handle: FileSystemDirectoryHandle,
@@ -26,6 +28,8 @@ type Props = {
 export function ModHomePage({ handle }: Props) {
   const [descriptor, setDescriptor] = useState<Descriptor>();
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const routes = getRoutes();
 
   useEffect(() => {
     (async () => {
@@ -70,17 +74,24 @@ export function ModHomePage({ handle }: Props) {
                                        size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
                                   <Card
                                     sx={{ cursor: 'pointer', height: '100%' }}
+                                    onClick={() => navigate(routes.DESCRIPTOR, { state: { handle } })}
                                   >
                                     <CardHeader
                                       title={
                                         <Box display="flex" alignItems="center" justifyContent="center" gap={1}>
                                           <Avatar src={`/images/categories/${category.name}/${item.name}.png`}
-                                                  variant="square" sx={{ width: 24, height: 24, backgroundColor: COLORS.SECONDARY_MAIN }}>
-                                            <div/>
+                                                  variant="square"
+                                                  sx={{
+                                                    width: 24,
+                                                    height: 24,
+                                                    backgroundColor: COLORS.SECONDARY_MAIN,
+                                                  }}>
+                                            <div />
                                           </Avatar>
-                                          <Typography variant="h5">{t(`category.${category.name}.${item.name}.title`)}</Typography>
+                                          <Typography
+                                            variant="h5">{t(`category.${category.name}.${item.name}.title`)}</Typography>
                                         </Box>
-                                    }
+                                      }
                                     />
                                     <CardContent>
                                       <Typography variant="body2">{t(
