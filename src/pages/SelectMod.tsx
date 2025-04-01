@@ -1,8 +1,9 @@
-import { COLORS } from '@assets/styles/theme.ts';
-import { Alert, AlertTitle, Box, Button, Typography } from '@mui/material';
-import { ModHomePage } from '@pages/ModHome.tsx';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { COLORS } from '@assets/styles/theme.ts'
+import { StateContext } from '@components/layout/Default.tsx'
+import { Alert, AlertTitle, Box, Button, Typography } from '@mui/material'
+import { ModHomePage } from '@pages/ModHome.tsx'
+import { useContext, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 enum Error {
   EMPTY = 'EMPTY',
@@ -13,6 +14,13 @@ export function SelectModPage() {
   const { t } = useTranslation()
   const [selected, setSelected] = useState<FileSystemDirectoryHandle>()
   const [error, setError] = useState<Error>()
+  const { globalState, setGlobalState } = useContext(StateContext)!
+
+  useEffect(() => {
+    if (!selected && globalState && globalState.handle) {
+      setSelected(globalState.handle)
+    }
+  }, [globalState, selected])
 
   useEffect(() => {
     if (selected) {
@@ -24,6 +32,7 @@ export function SelectModPage() {
           return
         }
 
+        setGlobalState({ handle: selected })
         setError(undefined)
       })()
     }
@@ -38,8 +47,8 @@ export function SelectModPage() {
   return (
     <Box sx={ { mt: 5 } }>
       {
-        (!error && selected) ? (
-          <ModHomePage handle={ selected } />
+        (!error && globalState?.handle) ? (
+          <ModHomePage />
         ) : (
           <>
             <Typography variant="h2" gutterBottom>

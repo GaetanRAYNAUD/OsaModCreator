@@ -1,8 +1,61 @@
-import i18n from './i18n';
+import i18n from './i18n'
 
 export const getRoutes = () => ({
   HOME: '/',
-  MOD: `/${i18n.t('routes.mod')}`,
-  CREATE_MOD: `/${i18n.t('routes.create_mod')}`,
-  DESCRIPTOR: `/${i18n.t('routes.descriptor')}`,
-});
+  MOD: `/${ i18n.t('routes.mod') }`,
+  CREATE_MOD: `/${ i18n.t('routes.create_mod') }`,
+  DESCRIPTOR: `/${ i18n.t('routes.descriptor') }`,
+  COMMON: {
+    ADVISORS: `/${ i18n.t('routes.common.advisors') }`,
+    COUNTRIES: `/${ i18n.t('routes.common.countries') }`,
+    EVENTS: `/${ i18n.t('routes.common.events') }`,
+    DECISIONS: `/${ i18n.t('routes.common.decisions') }`,
+    MISSIONS: `/${ i18n.t('routes.common.missions') }`,
+    TECHNOLOGIES: `/${ i18n.t('routes.common.technologies') }`,
+    UNITS: `/${ i18n.t('routes.common.units') }`,
+    INSTITUTIONS: `/${ i18n.t('routes.common.institutions') }`,
+  },
+  ECONOMY: {
+    BUILDINGS: `/${ i18n.t('routes.economy.buildings') }`,
+    TRADE_GOODS: `/${ i18n.t('routes.economy.trade_goods') }`,
+    PRICES: `/${ i18n.t('routes.economy.prices') }`,
+    GREAT_PROJECTS: `/${ i18n.t('routes.economy.great_projects') }`,
+    TRADE_NODES: `/${ i18n.t('routes.economy.trade_nodes') }`,
+    TRADE_COMPANIES: `/${ i18n.t('routes.economy.trade_companies') }`,
+    COLONIAL_REGIONS: `/${ i18n.t('routes.economy.colonial_regions') }`,
+  },
+  GOVERNMENT: {
+    GOVERNMENTS: `/${ i18n.t('routes.government.governments') }`,
+    GOVERNMENT_REFORMS: `/${ i18n.t('routes.government.government_reforms') }`,
+    CULTURES: `/${ i18n.t('routes.government.cultures') }`,
+    IDEAS: `/${ i18n.t('routes.government.ideas') }`,
+    POLICIES: `/${ i18n.t('routes.government.policies') }`,
+    CUSTOM_IDEAS: `/${ i18n.t('routes.government.custom_ideas') }`,
+    DISASTERS: `/${ i18n.t('routes.government.disasters') }`,
+    ESTATES: `/${ i18n.t('routes.government.estates') }`,
+    FACTIONS: `/${ i18n.t('routes.government.factions') }`,
+    PARLIAMENT_ISSUES: `/${ i18n.t('routes.government.parliament_issues') }`,
+    PARLIAMENT_BRIBES: `/${ i18n.t('routes.government.parliament_bribes') }`,
+  },
+  DIPLOMACY: {
+    CB: `/${ i18n.t('routes.diplomacy.cb') }`,
+    WAR_GOALS: `/${ i18n.t('routes.diplomacy.war_goals') }`,
+    DIPLOMATIC_ACTIONS: `/${ i18n.t('routes.diplomacy.diplomatic_actions') }`,
+  },
+  RELIGION: {
+    RELIGIONS: `/${ i18n.t('routes.religion.religions') }`,
+    CHURCH_ASPECTS: `/${ i18n.t('routes.religion.church_aspects') }`,
+    FERVOR: `/${ i18n.t('routes.religion.fervor') }`,
+    FETISHIST_CULTS: `/${ i18n.t('routes.religion.fetishist_cults') }`,
+    PERSONAL_DEITIES: `/${ i18n.t('routes.religion.personal_deities') }`,
+    RELIGIOUS_REFORMS: `/${ i18n.t('routes.religion.religious_reforms') }`,
+  },
+  HISTORY: {
+    BOOKMARKS: `/${ i18n.t('routes.history.bookmarks') }`,
+    COUNTRIES: `/${ i18n.t('routes.history.countries') }`,
+    PROVINCES: `/${ i18n.t('routes.history.provinces') }`,
+    ADVISORS: `/${ i18n.t('routes.history.advisors') }`,
+    DIPLOMACY: `/${ i18n.t('routes.history.diplomacy') }`,
+    WARS: `/${ i18n.t('routes.history.wars') }`,
+  },
+})

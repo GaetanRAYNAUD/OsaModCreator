@@ -1,5 +1,7 @@
+import { StateContext } from '@components/layout/Default.tsx'
 import { Box, Button, Typography } from '@mui/material';
 import { getRoutes } from '@routes.ts';
+import { useContext, useEffect } from 'react'
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 
@@ -7,6 +9,13 @@ export function CreateModPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const ROUTES = getRoutes()
+  const { globalState, setGlobalState } = useContext(StateContext)!
+
+  useEffect(() => {
+    if (globalState) {
+      setGlobalState(null)
+    }
+  }, [globalState, setGlobalState])
 
   return (
     <Box sx={ { mt: 5 } }>

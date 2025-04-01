@@ -1,0 +1,1 @@
+export const toList = <T>(v: T | T[] | undefined): T[] => v ? Array.isArray(v) ? v : [v] : []

@@ -1,5 +1,5 @@
-import { readFile } from '@eu4/eu4file.util.ts';
-import { AdvisorTypes, Descriptor } from '@eu4/types.ts';
+import { readFile } from '@eu4/eu4file.util.ts'
+import { AdvisorTypes, Descriptor } from '@eu4/types.ts'
 
 export class Eu4Folder<T> {
   name: string
@@ -50,10 +50,9 @@ export class Eu4Folder<T> {
 
 export class Eu4File<T> {
   name: string
-  folder?: Eu4Folder<never>
+  folder?: Eu4Folder<unknown>
 
-
-  constructor(name: string, folder?: Eu4Folder<never>) {
+  constructor(name: string, folder?: Eu4Folder<unknown>) {
     this.name = name
     this.folder = folder
   }
@@ -62,7 +61,7 @@ export class Eu4File<T> {
     if (this.folder) {
       return await readFile((await (await this.folder.getFile(handle, this.name)).getFile())) as T
     } else {
-      return await readFile(await (await handle.getFileHandle(this.name)).getFile()) as T;
+      return await readFile(await (await handle.getFileHandle(this.name)).getFile()) as T
     }
   }
 }

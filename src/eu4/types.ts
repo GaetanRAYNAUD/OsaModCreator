@@ -1,3 +1,27 @@
+export enum SteamTag {
+  ALTERNATIVE_HISTORY = 'Alternative History',
+  BALANCE = 'Balance',
+  EVENTS = 'Events',
+  EXPANSION = 'Expansion',
+  FIXES = 'Fixes',
+  GAMEPLAY = 'Gameplay',
+  GRAPHICS = 'Graphics',
+  GUIDE = 'Guide',
+  HISTORICAL = 'Historical',
+  LOADING_SCREEN = 'Loading Screen',
+  MAP = 'Map',
+  MILITARY = 'Military',
+  MISSIONS_AND_DECISIONS = 'Missions And Decisions',
+  NATIONAL_IDEAS = 'National Ideas',
+  NEW_NATIONS = 'New Nations',
+  RELIGION = 'Religion',
+  SOUND = 'Sound',
+  TECHNOLOGIES = 'Technologies',
+  TRADE = 'Trade',
+  TRANSLATION = 'Translation',
+  UTILITIES = 'Utilities',
+}
+
 export enum Power {
   ADM = 'ADM', DIP = 'DIP', MIL = 'MIL'
 }
@@ -5,12 +29,12 @@ export enum Power {
 export type Descriptor = {
   name: string;
   version: string;
-  tags: string[];
-  replace_path: string[] | string
+  tags: SteamTag[];
+  replace_path?: string[] | string
   supported_version: string;
   path: string;
-  dependencies: string[] | string;
-  picture: string;
+  dependencies?: string[] | string;
+  picture?: string;
 }
 
 export type AdvisorTypes = Record<string, AdvisorType>;

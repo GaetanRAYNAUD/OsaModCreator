@@ -1,5 +1,5 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -12,6 +12,7 @@ i18n.use(initReactI18next).init({
         'download': 'Download',
         'or': 'or',
         'error': 'Error',
+        'save': 'Save',
         'unsupported': {
           'title': '🚨 Browser not compatible',
           'browser1': 'Your browser does not support access to your local files.',
@@ -43,6 +44,59 @@ i18n.use(initReactI18next).init({
           'mod': 'mod',
           'create_mod': 'create-a-mod',
           'descriptor': 'descriptor',
+          'common': {
+            'advisors': 'common/advisors',
+            'countries': 'common/countries',
+            'events': 'common/events',
+            'decisions': 'common/decisions',
+            'missions': 'common/missions',
+            'technologies': 'common/technologies',
+            'units': 'common/units',
+            'institutions': 'common/institutions',
+          },
+          'economy': {
+            'buildings': 'economy/buildings',
+            'trade_goods': 'economy/trade_goods',
+            'prices': 'economy/prices',
+            'great_projects': 'economy/great_projects',
+            'trade_nodes': 'economy/trade_nodes',
+            'trade_companies': 'economy/trade_companies',
+            'colonial_regions': 'economy/colonial_regions',
+          },
+          'government': {
+            'governments': 'government/governments',
+            'government_reforms': 'government/government_reforms',
+            'cultures': 'government/cultures',
+            'ideas': 'government/ideas',
+            'policies': 'government/policies',
+            'custom_ideas': 'government/custom_ideas',
+            'disasters': 'government/disasters',
+            'estates': 'government/estates',
+            'factions': 'government/factions',
+            'parliament_issues': 'government/parliament_issues',
+            'parliament_bribes': 'government/parliament_bribes',
+          },
+          'diplomacy': {
+            'cb': 'diplomacy/cb',
+            'war_goals': 'diplomacy/war_goals',
+            'diplomatic_actions': 'diplomacy/diplomatic_actions',
+          },
+          'religion': {
+            'religions': 'religion/religions',
+            'church_aspects': 'religion/church_aspects',
+            'fervor': 'religion/fervor',
+            'fetishist_cults': 'religion/fetishist_cults',
+            'personal_deities': 'religion/personal_deities',
+            'religious_reforms': 'religion/religious_reforms',
+          },
+          'history': {
+            'bookmarks': 'history/bookmarks',
+            'countries': 'history/countries',
+            'provinces': 'history/provinces',
+            'advisors': 'history/advisors',
+            'diplomacy': 'history/diplomacy',
+            'wars': 'history/wars',
+          },
         },
         'category': {
           'main': {
@@ -268,6 +322,6 @@ i18n.use(initReactI18next).init({
   interpolation: {
     escapeValue: false,
   },
-});
+})
 
-export default i18n;
+export default i18n
