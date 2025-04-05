@@ -289,6 +289,20 @@ i18n.use(initReactI18next).init({
             },
           },
         },
+        'input': {
+          'descriptor': {
+            'name': 'Name',
+            'version': 'Mod version',
+            'supportedVersion': 'Supported version',
+            'supportedVersion.tooltip': 'Must be in form: v1.xx, with xx the version of the game supported. Can be a * if support any sub version.',
+            'tags': 'Tags',
+            'replacePath': 'Paths to replace',
+            'replacePath.tooltip': 'Game folders than you want to completely replace with the mod\'s folder.',
+            'picture': 'Picture',
+            'dependencies': 'Dependencies',
+            'dependencies.tooltip': 'List of mod names to tell the game to load before this one.',
+          },
+        },
       },
     },
     fr: {

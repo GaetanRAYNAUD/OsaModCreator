@@ -1,12 +1,13 @@
 import { StateContext } from '@components/layout/Default.tsx'
+import { InputProps } from '@components/layout/form.type'
+import { InputType } from '@components/layout/form.type.ts'
 import { ModFormLayout } from '@components/layout/ModFormLayout.tsx'
 import { SteamTag } from '@eu4/types.ts'
-import {
-  Box, capitalize, Checkbox, Chip, FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField,
-} from '@mui/material'
+import { capitalize, SelectChangeEvent } from '@mui/material'
 import { getRoutes } from '@routes.ts'
+import { fileFromPath } from '@utils/handle.utils.ts'
 import { toList } from '@utils/objects.utils.ts'
-import { useContext, useEffect, useState } from 'react'
+import { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export function DescriptorPage() {
@@ -19,9 +20,10 @@ export function DescriptorPage() {
   const [version, setVersion] = useState<string>('')
   const [supportedVersion, setSupportedVersion] = useState<string>('')
   const [tags, setTags] = useState<SteamTag[]>([])
-  const [replacepath, setReplacePath] = useState<string[]>([])
+  const [replacePath, setReplacePath] = useState<string[]>([])
   const [dependencies, setDependencies] = useState<string[]>([])
   const [picture, setPicture] = useState<string>('')
+  const [pictureFile, setPictureFile] = useState<File | undefined>(undefined)
 
   useEffect(() => {
     if (!globalState || !globalState.handle) {
@@ -43,71 +45,86 @@ export function DescriptorPage() {
     }
   }, [globalState])
 
-  //todo translation, generify components
+  useEffect(() => {
+    (async () => {
+      if (picture && !!picture && globalState && globalState.handle) {
+        setPictureFile(await fileFromPath(globalState.handle, 'thumbnail.png'))
+      }
+    })()
+  }, [picture, globalState])
 
   const handleSubmit = () => {
     setLoading(true)
     console.log('handleSubmit')
-    console.log(`tags: ${ tags }`)
+    //todo handle picture file
     // setLoading(false)
   }
 
-  const handleTags = (event: SelectChangeEvent<SteamTag[]>) => {
-    if (Array.isArray(event.target.value)) {
-      setTags(event.target.value.sort())
-    }
-  }
+  const inputs: InputProps<any>[] = [
+    {
+      type: InputType.TEXT,
+      required: true,
+      label: 'input.descriptor.name',
+      value: name,
+      onChange: (event: ChangeEvent<HTMLInputElement>) => setName(event.target.value),
+    },
+    {
+      type: InputType.TEXT,
+      required: false,
+      label: 'input.descriptor.version',
+      value: version,
+      onChange: (event: ChangeEvent<HTMLInputElement>) => setVersion(event.target.value),
+    },
+    {
+      type: InputType.TEXT,
+      required: true,
+      label: 'input.descriptor.supportedVersion',
+      value: supportedVersion,
+      onChange: (event: ChangeEvent<HTMLInputElement>) => setSupportedVersion(event.target.value),
+      regex: /v\d\.(\d{1,3}|\*)\.?(\d{1,3}|\*)?\.?(\d{1,3}|\*)?/,
+      tooltip: 'input.descriptor.supportedVersion.tooltip',
+    },
+    {
+      type: InputType.SELECT,
+      required: false,
+      label: 'input.descriptor.tags',
+      value: tags,
+      onChange: (event: SelectChangeEvent<SteamTag[]>) => {
+        if (Array.isArray(event.target.value)) {
+          setTags(event.target.value.sort())
+        }
+      },
+      values: Object.values(SteamTag),
+    },
+    {
+      type: InputType.MULTI_TEXT,
+      required: false,
+      label: 'input.descriptor.replacePath',
+      value: replacePath,
+      onChange: setReplacePath,
+      tooltip: 'input.descriptor.replacePath.tooltip',
+    },
+    {
+      type: InputType.MULTI_TEXT,
+      required: false,
+      label: 'input.descriptor.dependencies',
+      value: dependencies,
+      onChange: setDependencies,
+      tooltip: 'input.descriptor.dependencies.tooltip',
+    },
+    {
+      type: InputType.FILE,
+      required: false,
+      label: 'input.descriptor.picture',
+      value: pictureFile,
+      onChange: setPictureFile,
+      accept: 'image/png',
+      maxWidth: 200,
+    },
+  ]
 
   return (
-    <ModFormLayout handleSubmit={ handleSubmit } loading={ loading }>
-      <TextField
-        fullWidth
-        label="Nom"
-        required
-        value={ name }
-        onChange={ (event) => setName(event.target.value) }
-      />
-      <TextField
-        fullWidth
-        label="Version"
-        value={ version }
-        onChange={ (event) => setVersion(event.target.value) }
-      />
-      <TextField
-        fullWidth
-        label="Supported version"
-        required
-        value={ supportedVersion }
-        onChange={ (event) => setSupportedVersion(event.target.value) }
-      />
-      <FormControl fullWidth>
-        <InputLabel id="label-tags">Tags</InputLabel>
-        <Select
-          labelId="label-tags"
-          id="demo-multiple-chip"
-          multiple
-          value={ tags }
-          onChange={ handleTags }
-          input={ <OutlinedInput label="Tags" /> }
-          renderValue={ (selected) => (
-            <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 0.5 } }>
-              { selected.map((value) => (
-                <Chip key={ value } label={ value } />
-              )) }
-            </Box>
-          ) }
-        >
-          { Object.values(SteamTag).map((name) => (
-            <MenuItem
-              key={ name }
-              value={ name }
-            >
-              <Checkbox checked={ tags.includes(name) } size="small" />
-              <ListItemText primary={ name } />
-            </MenuItem>
-          )) }
-        </Select>
-      </FormControl>
-    </ModFormLayout>
+    globalState && globalState.handle &&
+    <ModFormLayout handle={ globalState.handle } handleSubmit={ handleSubmit } loading={ loading } inputs={ inputs } />
   )
 }
