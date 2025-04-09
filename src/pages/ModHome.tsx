@@ -6,7 +6,8 @@ import { Item, itemCategories, ItemCategory } from '@eu4/items.ts'
 import { Descriptor } from '@eu4/types.ts'
 import { ArrowDropDown } from '@mui/icons-material'
 import {
-  Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Card, CardContent, CardHeader, Grid2, Typography,
+  Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Card, CardActionArea, CardContent, CardHeader, Grid2,
+  Typography,
 } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -67,38 +68,45 @@ export function ModHomePage() {
                         </AccordionSummary>
                         <AccordionDetails>
                           <Grid2 key={ `grid-category-${ category.name }` } container justifyContent="center"
-                                 spacing={ 2 }
-                                 size={ 12 }>
+                                 spacing={ 2 } size={ 12 }>
                             {
                               category.items.map((item) => (
                                 <Grid2 key={ `grid-item-${ category.name }-${ item.name }` }
                                        size={ { xs: 12, sm: 6, md: 4, lg: 3 } }>
                                   <Card
-                                    sx={ { cursor: 'pointer', height: '100%' } }
+                                    sx={ {
+                                      height: '100%',
+                                      opacity: item.file || item.folder ? 1 : 0.5,
+                                      pointerEvents: item.file || item.folder ? 'auto' : 'none',
+                                      cursor: item.file || item.folder ? 'pointer' : 'not-allowed',
+                                      boxShadow: item.file || item.folder ? undefined : 'none',
+                                    } }
                                     onClick={ () => handleClick(item, category) }
                                   >
-                                    <CardHeader
-                                      title={
-                                        <Box display="flex" alignItems="center" justifyContent="center" gap={ 1 }>
-                                          <Avatar src={ `/images/categories/${ category.name }/${ item.name }.png` }
-                                                  variant="square"
-                                                  sx={ {
-                                                    width: 24,
-                                                    height: 24,
-                                                    backgroundColor: COLORS.SECONDARY_MAIN,
-                                                  } }>
-                                            <div />
-                                          </Avatar>
-                                          <Typography
-                                            variant="h5">{ t(
-                                            `category.${ category.name }.${ item.name }.title`) }</Typography>
-                                        </Box>
-                                      }
-                                    />
-                                    <CardContent>
-                                      <Typography variant="body2">{ t(
-                                        `category.${ category.name }.${ item.name }.desc`) }</Typography>
-                                    </CardContent>
+                                    <CardActionArea>
+                                      <CardHeader
+                                        title={
+                                          <Box display="flex" alignItems="center" justifyContent="center" gap={ 1 }>
+                                            <Avatar src={ `/images/categories/${ category.name }/${ item.name }.png` }
+                                                    variant="square"
+                                                    sx={ {
+                                                      width: 24,
+                                                      height: 24,
+                                                      backgroundColor: COLORS.SECONDARY_MAIN,
+                                                    } }>
+                                              <div />
+                                            </Avatar>
+                                            <Typography
+                                              variant="h5">{ t(
+                                              `category.${ category.name }.${ item.name }.title`) }</Typography>
+                                          </Box>
+                                        }
+                                      />
+                                      <CardContent>
+                                        <Typography variant="body2">{ t(
+                                          `category.${ category.name }.${ item.name }.desc`) }</Typography>
+                                      </CardContent>
+                                    </CardActionArea>
                                   </Card>
                                 </Grid2>
                               ))

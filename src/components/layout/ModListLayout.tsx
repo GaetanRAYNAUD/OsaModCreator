@@ -1,21 +1,45 @@
+import { COLORS } from '@assets/styles/theme.ts'
+import { StateContext } from '@components/layout/Default.tsx'
 import { ModLayout } from '@components/layout/ModLayout.tsx'
-import { FolderItem, ItemCategory } from '@eu4/items.ts'
-import { Descriptor } from '@eu4/types.ts'
-import React from 'react'
+import { Edit } from '@mui/icons-material'
+import { Avatar, Card, CardActionArea, CardHeader, Grid2 } from '@mui/material'
+import { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-type Props<T> = {
-  descriptor: Descriptor,
-  category: ItemCategory,
-  item: FolderItem<T>,
-}
+export function ModListLayout() {
+  const { globalState } = useContext(StateContext)!
+  const [files, setFiles] = useState<FileSystemFileHandle[]>([])
+  const navigate = useNavigate()
 
-export function ModListLayout({
-                                category, item, descriptor, children,
-                              }: React.PropsWithChildren<Props<any>>) {
+  useEffect(() => {
+    (async () => {
+      if (globalState && globalState.handle && globalState.item && globalState.item.folder) {
+        setFiles(await globalState.item.folder.listFiles(globalState.handle))
+      }
+    })()
+  }, [globalState])
 
   return (
-    <ModLayout category={ category } item={ item } descriptor={ descriptor }>
-      { children }
+    <ModLayout dark>
+      {
+        files.map(file => (
+          <Grid2 key={ file.name } justifyContent="center" size={ 12 }
+                 sx={ { backgroundColor: COLORS.SECONDARY_DARK } }>
+            <Card
+              sx={ {
+                height: '100%',
+                cursor: 'pointer',
+              } }
+              onClick={ () => navigate(file.name) }
+            >
+              <CardActionArea>
+                <CardHeader title={ file.name } slotProps={ { title: { variant: 'h5' } } }
+                            action={ <Avatar sx={ { backgroundColor: 'white', color: COLORS.PRIMARY_MAIN, } }><Edit /></Avatar> } />
+              </CardActionArea>
+            </Card>
+          </Grid2>
+        ))
+      }
     </ModLayout>
   )
 }

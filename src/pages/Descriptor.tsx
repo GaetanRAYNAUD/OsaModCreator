@@ -3,10 +3,9 @@ import { InputProps } from '@components/layout/form.type'
 import { InputType } from '@components/layout/form.type.ts'
 import { ModFormLayout } from '@components/layout/ModFormLayout.tsx'
 import { SteamTag } from '@eu4/types.ts'
-import { capitalize, SelectChangeEvent } from '@mui/material'
+import { SelectChangeEvent } from '@mui/material'
 import { getRoutes } from '@routes.ts'
-import { fileFromPath } from '@utils/handle.utils.ts'
-import { toList } from '@utils/objects.utils.ts'
+import { fileFromPath, writeFile } from '@utils/handle.utils.ts'
 import { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -24,6 +23,7 @@ export function DescriptorPage() {
   const [dependencies, setDependencies] = useState<string[]>([])
   const [picture, setPicture] = useState<string>('')
   const [pictureFile, setPictureFile] = useState<File | undefined>(undefined)
+  const [pictureFileChanged, setPictureFileChanged] = useState<boolean>(false)
 
   useEffect(() => {
     if (!globalState || !globalState.handle) {
@@ -36,9 +36,9 @@ export function DescriptorPage() {
           setName(descriptor.name ?? '')
           setVersion(descriptor.version ?? '')
           setSupportedVersion(descriptor.supported_version ?? '')
-          setTags((descriptor.tags ?? []).map((t: SteamTag) => capitalize(t)).sort())
-          setReplacePath(toList(descriptor.replace_path) ?? [])
-          setDependencies(toList(descriptor.dependencies) ?? [])
+          setTags(descriptor.tags)
+          setReplacePath(descriptor.replace_path)
+          setDependencies([...descriptor.dependencies])
           setPicture(descriptor.picture ?? '')
         }
       })()
@@ -47,17 +47,37 @@ export function DescriptorPage() {
 
   useEffect(() => {
     (async () => {
-      if (picture && !!picture && globalState && globalState.handle) {
+      if (globalState && globalState.handle) {
         setPictureFile(await fileFromPath(globalState.handle, 'thumbnail.png'))
       }
     })()
   }, [picture, globalState])
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setLoading(true)
-    console.log('handleSubmit')
-    //todo handle picture file
-    // setLoading(false)
+
+    if (pictureFileChanged && pictureFile && globalState && globalState.handle) {
+      await writeFile(pictureFile, globalState.handle, 'thumbnail.png')
+    }
+
+    if (globalState && globalState.item && globalState.item.file && globalState.handle) {
+      const descriptor = await globalState.item.file.getFile(globalState.handle)
+      descriptor.name = name
+      descriptor.version = version && !!version ? version : undefined
+      descriptor.dependencies = dependencies.length > 0 ? dependencies : undefined
+      descriptor.replace_path = replacePath.length > 0 ? replacePath : undefined
+      descriptor.picture = picture && !!picture ? picture : undefined
+      descriptor.supported_version = supportedVersion
+      descriptor.tags = tags.length > 0 ? tags : undefined
+
+      if (typeof descriptor.remote_file_id === 'number') {
+        descriptor.remote_file_id = descriptor.remote_file_id.toString()
+      }
+
+      await globalState.item.file.writeFile(globalState.handle, descriptor)
+    }
+
+    setLoading(false)
   }
 
   const inputs: InputProps<any>[] = [
@@ -80,8 +100,9 @@ export function DescriptorPage() {
       required: true,
       label: 'input.descriptor.supportedVersion',
       value: supportedVersion,
-      onChange: (event: ChangeEvent<HTMLInputElement>) => setSupportedVersion(event.target.value),
-      regex: /v\d\.(\d{1,3}|\*)\.?(\d{1,3}|\*)?\.?(\d{1,3}|\*)?/,
+      onChange: (event: ChangeEvent<HTMLInputElement>) =>
+        setSupportedVersion(event.target.value.startsWith('v') ? event.target.value : 'v' + event.target.value),
+      regex: /v?\d\.(\d{1,3}|\*)\.?(\d{1,3}|\*)?\.?(\d{1,3}|\*)?/,
       tooltip: 'input.descriptor.supportedVersion.tooltip',
     },
     {
@@ -117,7 +138,11 @@ export function DescriptorPage() {
       required: false,
       label: 'input.descriptor.picture',
       value: pictureFile,
-      onChange: setPictureFile,
+      onChange: value => {
+        setPictureFile(value)
+        setPicture('thumbnail.png')
+        setPictureFileChanged(true)
+      },
       accept: 'image/png',
       maxWidth: 200,
     },

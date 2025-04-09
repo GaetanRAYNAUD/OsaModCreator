@@ -2,7 +2,7 @@ import { FileInput } from '@components/layout/form.type'
 import { Image } from '@mui/icons-material'
 import { Button, Paper, Stack, Typography } from '@mui/material'
 import { imageFromFile } from '@utils/handle.utils.ts'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
@@ -18,11 +18,23 @@ export function ImageInput({ input }: React.PropsWithChildren<Props>) {
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      setImageSrc((await imageFromFile(file)).image)
-      setFileName(file.name)
+      await handleChangeFile(file)
       input.onChange(file)
     }
   }
+
+  const handleChangeFile = async (file: File) => {
+    setImageSrc((await imageFromFile(file)).image)
+    setFileName(file.name)
+  }
+
+  useEffect(() => {
+    (async () => {
+      if (input.value) {
+        await handleChangeFile(input.value)
+      }
+    })()
+  }, [input])
 
   return (
     <Stack direction="row" spacing={ 2 } alignItems="center">

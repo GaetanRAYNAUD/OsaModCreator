@@ -1,4 +1,4 @@
-import { Jomini, Query, Writer } from 'jomini';
+import { Jomini, Query, Writer } from 'jomini'
 
 const jomini = await Jomini.initialize()
 
@@ -10,96 +10,86 @@ export async function readFile(file: Blob): Promise<ReturnType<Query['root']>> {
 const FLAT_ARRAY_KEYS = [
   'ethic',
   'trait',
-];
+]
 const UNQUOTED_KEYS = [
   'gender',
-];
+]
 
-/**
- * @param writer {Writer}
- * @param key {string}
- * @param value {any}
- */
 export function writeKeyValue(writer: Writer, key: string, value: any) {
-  if (/^[a-zA-Z_]+$/.test(key)) {
-    writer.write_unquoted(key);
-  } else {
-    writer.write_quoted(key);
+  if (value === undefined) {
+    return
   }
-  writer.write_operator('=');
-  writeAny(writer, value, key);
+
+  if (/^[a-zA-Z_]+$/.test(key)) {
+    writer.write_unquoted(key)
+  } else {
+    writer.write_quoted(key)
+  }
+  writer.write_operator('=')
+  writeAny(writer, value, key)
 }
 
-/**
- * @param writer {Writer}
- * @param obj {object}
- */
+export function convertObject(obj: object): Uint8Array {
+  return jomini.write((writer) => writeEntries(writer, obj));
+}
+
 export function writeObject(writer: Writer, obj: object) {
-  writer.write_object_start();
-  writeEntries(writer, obj);
-  writer.write_end();
+  writer.write_object_start()
+  writeEntries(writer, obj)
+  writer.write_end()
 }
 
-/**
- * @param writer {Writer}
- * @param obj {object}
- */
 function writeEntries(writer: Writer, obj: object) {
   for (const [key, value] of Object.entries(obj)) {
     if (FLAT_ARRAY_KEYS.includes(key) && Array.isArray(value)) {
       for (const item of value) {
-        writeKeyValue(writer, key, item);
+        writeKeyValue(writer, key, item)
       }
     } else {
-      writeKeyValue(writer, key, value);
+      writeKeyValue(writer, key, value)
     }
   }
 }
 
-/**
- * @param writer {Writer}
- * @param obj {Array}
- */
-export function writeArray(writer: Writer, obj: any[]) {
-  writer.write_array_start();
+export function writeArray(writer: Writer, obj: any[], key: string | undefined = undefined) {
+  writer.write_array_start()
   for (const item of obj) {
-    writeAny(writer, item);
+    if (key && FLAT_ARRAY_KEYS.includes(key)) {
+      writeAny(writer, item)
+    } else {
+      writeAny(writer, item)
+    }
   }
-  writer.write_end();
+  writer.write_end()
 }
 
-/**
- * @param writer {Writer}
- * @param obj {any}
- * @param key {string}
- */
 function writeAny(writer: Writer, obj: any, key: string | undefined = undefined) {
   if (Array.isArray(obj)) {
-    writeArray(writer, obj);
+    writeArray(writer, obj, key)
   } else switch (typeof obj) {
     case 'string':
       if (key && UNQUOTED_KEYS.includes(key)) {
-        writer.write_unquoted(obj);
+        writer.write_unquoted(obj)
       } else {
-        writer.write_quoted(obj);
+        writer.write_quoted(obj)
       }
-      break;
+      break
     case 'number':
       if (Number.isInteger(obj)) {
-        writer.write_integer(obj);
+        writer.write_integer(obj)
       } else {
-        writer.write_f64(obj);
+        writer.write_f64(obj)
       }
-      break;
+      break
     case 'boolean':
-      writer.write_bool(obj);
-      break;
+      writer.write_bool(obj)
+      break
     case 'object':
       if (obj instanceof Date) {
-        writer.write_date(obj);
+        writer.write_date(obj)
       } else if (obj) {
-        writeObject(writer, obj);
+        writeObject(writer, obj)
       }
-      break;
+      break
   }
 }

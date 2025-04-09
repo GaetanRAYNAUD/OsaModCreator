@@ -6,7 +6,7 @@ import {
   Autocomplete, Box, Button, CardActions, Checkbox, Chip, FormControl, InputAdornment, InputLabel, ListItemText,
   MenuItem, OutlinedInput, Select, TextField, Tooltip,
 } from '@mui/material'
-import React, { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
@@ -18,7 +18,7 @@ type Props = {
 
 export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
   const { t } = useTranslation()
-  const [valid, setValid] = React.useState<boolean>(false)
+  const [valid, setValid] = useState<boolean>(false)
 
   useEffect(() => {
     for (const input of inputs) {
@@ -134,7 +134,7 @@ export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
             case InputType.MULTI_TEXT:
               return (
                 <Autocomplete
-                  key={ `multi-text-${ input.label }-${ index }` }
+                  key={ `multi-text-${ input.label }` }
                   multiple
                   freeSolo
                   fullWidth
@@ -143,11 +143,14 @@ export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
                   onChange={ (_, newValue) => {
                     input.onChange(newValue?.map(v => v?.trim()))
                   } }
+                  filterSelectedOptions={ false }
                   renderTags={ (value: string[], getTagProps) =>
                     <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 0.5 } }>
-                      { value.map((value, index) => (
-                        <Chip label={ value } { ...getTagProps({ index }) } key={ value } />
-                      )) }
+                      { value.map((value, index) => {
+                        const { key, ...tagProps } = getTagProps({ index })
+
+                        return <Chip key={ key } label={ value } { ...tagProps } />
+                      }) }
                     </Box>
                   }
                   renderInput={ (params) => (
@@ -158,13 +161,23 @@ export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
                       placeholder={ t(input.label) }
                       slotProps={ input.tooltip ? {
                         input: {
-                          endAdornment: <InputAdornment position="end">
-                            <Tooltip title={ t(input.tooltip) }>
-                              <Help />
-                            </Tooltip>
-                          </InputAdornment>,
+                          ...params.InputProps,
+                          endAdornment: (
+                            <>
+                              <InputAdornment position="end">
+                                <Tooltip title={ t(input.tooltip) }>
+                                  <Help />
+                                </Tooltip>
+                              </InputAdornment>
+                              { params.InputProps.endAdornment }
+                            </>
+                          ),
                         },
-                      } : {} }
+                      } : {
+                        input: {
+                          ...params.InputProps,
+                        },
+                      } }
                     />
                   ) }
                 />

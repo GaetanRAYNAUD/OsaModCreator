@@ -30,11 +30,12 @@ export type Descriptor = {
   name: string;
   version: string;
   tags: SteamTag[];
-  replace_path?: string[] | string
+  replace_path?: string[];
   supported_version: string;
   path: string;
-  dependencies?: string[] | string;
+  dependencies?: string[];
   picture?: string;
+  remote_file_id?: string;
 }
 
 export type AdvisorTypes = Record<string, AdvisorType>;

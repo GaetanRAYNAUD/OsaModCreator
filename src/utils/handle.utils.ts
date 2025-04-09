@@ -8,12 +8,19 @@ export type ImageType = {
   clean: () => void;
 }
 
+export async function folderFromPath(handle: FileSystemDirectoryHandle, ...path: string[]): Promise<FileSystemDirectoryHandle> {
+  let h = handle
+  for (const item of path) {
+    h = await h.getDirectoryHandle(item)
+  }
+
+  return h
+}
+
 export async function fileFromPath(handle: FileSystemDirectoryHandle, ...path: string[]): Promise<File> {
   let h = handle
   if (path.length > 1) {
-    for (let i = 0; i < path.length - 1; i++) {
-      h = await h.getDirectoryHandle(path[i])
-    }
+    h = await folderFromPath(handle, ...path.slice(0, -1))
   }
 
   return (await h.getFileHandle(path[path.length - 1])).getFile()
@@ -70,4 +77,15 @@ export async function imageTga(file: File): Promise<ImageType> {
     image,
     clean: () => URL.revokeObjectURL(image),
   }
+}
+
+export async function writeFile(file: File, handle: FileSystemDirectoryHandle, fileName?: string, ...path: string[]) {
+  if (path) {
+    handle = await folderFromPath(handle, ...path)
+  }
+
+  const targetHandle = await handle.getFileHandle(fileName ?? file.name, { create: true })
+  const writable = await targetHandle.createWritable()
+  await writable.write(file)
+  await writable.close()
 }

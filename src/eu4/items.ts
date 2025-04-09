@@ -1,4 +1,4 @@
-import { DescriptorFile, Eu4File, Eu4Folder } from '@eu4/folders.ts'
+import { DescriptorFile, Eu4File, Eu4Folder, UnitsFolder } from '@eu4/folders.ts'
 import { getRoutes } from '@routes.ts'
 
 export type ItemCategory = {
@@ -10,6 +10,7 @@ export type ItemCategory = {
 export interface Item<T> {
   name: string;
   route: string;
+  subRoute?: string;
   folder?: Eu4Folder<T>;
   file?: Eu4File<T>;
 }
@@ -48,6 +49,7 @@ export const itemCategories: ItemCategory[] = [
     }, {
       name: 'units',
       route: routes.COMMON.UNITS,
+      folder: UnitsFolder,
     }, {
       name: 'institutions',
       route: routes.COMMON.INSTITUTIONS,
@@ -119,7 +121,7 @@ export const itemCategories: ItemCategory[] = [
     name: 'diplomacy',
     items: [{
       name: 'cb',
-      route: routes.DIPLOMACY.CB,
+      route: routes.DIPLOMACY.CBS,
     }, {
       name: 'war_goals',
       route: routes.DIPLOMACY.WAR_GOALS,
@@ -138,7 +140,7 @@ export const itemCategories: ItemCategory[] = [
       route: routes.RELIGION.CHURCH_ASPECTS,
     }, {
       name: 'fervor',
-      route: routes.RELIGION.FERVOR,
+      route: routes.RELIGION.FERVORS,
     }, {
       name: 'fetishist_cults',
       route: routes.RELIGION.FETISHIST_CULTS,

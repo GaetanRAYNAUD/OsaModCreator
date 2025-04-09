@@ -1,3 +1,4 @@
+import { ModListLayout } from '@components/layout/ModListLayout.tsx'
 import { Item, ItemCategory } from '@eu4/items.ts'
 import { Descriptor } from '@eu4/types.ts'
 import { Box } from '@mui/material'
@@ -41,6 +42,8 @@ const DefaultLayout: React.FC = () => {
             <Route path={ ROUTES.MOD } element={ <SelectModPage /> } />
             <Route path={ ROUTES.CREATE_MOD } element={ <CreateModPage /> } />
             <Route path={ ROUTES.DESCRIPTOR } element={ <DescriptorPage /> } />
+            <Route path={ ROUTES.COMMON.UNITS } element={ <ModListLayout /> } />
+            <Route path={ ROUTES.COMMON.UNIT } element={ <ModListLayout /> } />
             <Route path="*" element={ <Navigate to={ ROUTES.MOD } replace /> } />
           </Routes>
         </StateContext.Provider>

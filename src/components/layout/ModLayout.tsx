@@ -6,7 +6,11 @@ import React, { useContext, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-export function ModLayout({ children }: React.PropsWithChildren<{}>) {
+type Props = {
+  dark?: boolean;
+}
+
+export function ModLayout({ children, dark = false }: React.PropsWithChildren<Props>) {
   const { t } = useTranslation()
   const routes = getRoutes()
   const navigate = useNavigate()
@@ -34,7 +38,7 @@ export function ModLayout({ children }: React.PropsWithChildren<{}>) {
         <Typography variant="h4" gutterBottom>
           { t(`category.${ globalState.category.name }.${ globalState.item.name }.title`) }
         </Typography>
-        <Card sx={ { backgroundColor: COLORS.SECONDARY_MAIN, padding: 3 } }>
+        <Card sx={ { backgroundColor: dark ? COLORS.SECONDARY_DARK : COLORS.SECONDARY_MAIN, padding: 3 } }>
           <Grid2 container spacing={ 2 }>
             { children }
           </Grid2>
