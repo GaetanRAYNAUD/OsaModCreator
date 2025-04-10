@@ -30,10 +30,10 @@ export type Descriptor = {
   name: string;
   version: string;
   tags: SteamTag[];
-  replace_path?: string[];
+  replace_path: string[];
   supported_version: string;
   path: string;
-  dependencies?: string[];
+  dependencies: string[];
   picture?: string;
   remote_file_id?: string;
 }
@@ -59,3 +59,49 @@ export type Modifier = {
   prestige: number
   production_efficiency: number
 }
+
+export type Trigger = {}
+
+export type Unit = {
+  type: UnitType;
+  unit_type?: string; //tech_group
+  maneuver?: number;
+  offensive_morale?: number;
+  defensive_morale?: number;
+  offensive_fire?: number;
+  defensive_fire?: number;
+  offensive_shock?: number;
+  defensive_shock?: number;
+  hull_size?: number;
+  base_cannons?: number;
+  sail_speed?: number;
+  blockade?: number;
+  sprite_level?: number;
+  sailors?: number;
+  trade_power?: number;
+  trigger?: Trigger;
+}
+
+export enum UnitType {
+  INFANTRY = 'infantry',
+  CAVALRY = 'cavalry',
+  ARTILLERY = 'artillery',
+  HEAVY_SHIP = 'heavy_ship',
+  LIGHT_SHIP = 'light_ship',
+  GALLEY = 'galley',
+  TRANSPORT = 'transport',
+}
+
+export const isLandUnit = (type: UnitType): boolean => {
+  switch (type) {
+    case UnitType.INFANTRY:
+    case UnitType.CAVALRY:
+    case UnitType.ARTILLERY:
+      return true;
+    case UnitType.HEAVY_SHIP:
+    case UnitType.LIGHT_SHIP:
+    case UnitType.GALLEY:
+    case UnitType.TRANSPORT:
+      return false;
+  }
+};

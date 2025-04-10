@@ -3,7 +3,8 @@ import { Item, ItemCategory } from '@eu4/items.ts'
 import { Descriptor } from '@eu4/types.ts'
 import { Box } from '@mui/material'
 import { CreateModPage } from '@pages/CreateMod.tsx'
-import { DescriptorPage } from '@pages/Descriptor.tsx'
+import { DescriptorPage } from '@pages/eu4/Descriptor.tsx'
+import { UnitPage } from '@pages/eu4/Unit.tsx';
 import { HomePage } from '@pages/Home.tsx'
 import { SelectModPage } from '@pages/SelectMod.tsx'
 import { getRoutes } from '@routes.ts'
@@ -43,7 +44,7 @@ const DefaultLayout: React.FC = () => {
             <Route path={ ROUTES.CREATE_MOD } element={ <CreateModPage /> } />
             <Route path={ ROUTES.DESCRIPTOR } element={ <DescriptorPage /> } />
             <Route path={ ROUTES.COMMON.UNITS } element={ <ModListLayout /> } />
-            <Route path={ ROUTES.COMMON.UNIT } element={ <ModListLayout /> } />
+            <Route path={ ROUTES.COMMON.UNIT } element={ <UnitPage /> } />
             <Route path="*" element={ <Navigate to={ ROUTES.MOD } replace /> } />
           </Routes>
         </StateContext.Provider>

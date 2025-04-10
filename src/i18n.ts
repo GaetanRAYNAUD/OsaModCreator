@@ -289,6 +289,17 @@ i18n.use(initReactI18next).init({
             },
           },
         },
+        'unit': {
+          'type': {
+            'infantry': 'Infantry',
+            'cavalry': 'Cavalry',
+            'artillery': 'Artillery',
+            'heavy_ship': 'Heavy ship',
+            'light_ship': 'Light ship',
+            'galley': 'Galley',
+            'transport': 'Transport',
+          }
+        },
         'input': {
           'descriptor': {
             'name': 'Name',
@@ -302,6 +313,26 @@ i18n.use(initReactI18next).init({
             'dependencies': 'Dependencies',
             'dependencies.tooltip': 'List of mod names to tell the game to load before this one.',
           },
+          'unit': {
+            'type': 'Unit type',
+            'unitType': 'Technology group',
+            'unitType.tooltip': 'Technology group this unit is available for. Leave blank to be available for everyone.',
+            'maneuver': 'Maneuver',
+            'offensiveMorale': 'Offensive Morale',
+            'defensiveMorale': 'Defensive Morale',
+            'offensiveFire': 'Offensive Fire',
+            'defensiveFire': 'Defensive Fire',
+            'offensiveShock': 'Offensive Shock',
+            'defensiveShock': 'Defensive Shock',
+            'hullSize': 'Hull Size',
+            'baseCannons': 'Number of Cannons',
+            'sailSpeed': 'Sail Speed',
+            'blockade': 'Blockade',
+            'spriteLevel': 'Sprite Level',
+            'sailors': 'Number of Sailors',
+            'sailors.tooltip': 'Cost in sailors to build this ship.',
+            'tradePower': 'Trade Power',
+          }
         },
       },
     },

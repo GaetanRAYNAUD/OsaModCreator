@@ -1,8 +1,8 @@
 import { StateContext } from '@components/layout/Default.tsx'
-import { InputProps } from '@components/layout/form.type'
+import { InputProps } from '@components/layout/form.type.ts'
 import { InputType } from '@components/layout/form.type.ts'
 import { ModFormLayout } from '@components/layout/ModFormLayout.tsx'
-import { SteamTag } from '@eu4/types.ts'
+import { Descriptor, SteamTag } from '@eu4/types.ts';
 import { SelectChangeEvent } from '@mui/material'
 import { getRoutes } from '@routes.ts'
 import { fileFromPath, writeFile } from '@utils/handle.utils.ts'
@@ -31,13 +31,13 @@ export function DescriptorPage() {
     } else {
       (async () => {
         if (globalState.item && globalState.item.file && globalState.handle) {
-          const descriptor = await globalState.item.file.getFile(globalState.handle)
+          const descriptor: Descriptor = await globalState.item.file.getFile(globalState.handle)
 
           setName(descriptor.name ?? '')
           setVersion(descriptor.version ?? '')
           setSupportedVersion(descriptor.supported_version ?? '')
           setTags(descriptor.tags)
-          setReplacePath(descriptor.replace_path)
+          setReplacePath([...descriptor.replace_path])
           setDependencies([...descriptor.dependencies])
           setPicture(descriptor.picture ?? '')
         }
@@ -106,7 +106,7 @@ export function DescriptorPage() {
       tooltip: 'input.descriptor.supportedVersion.tooltip',
     },
     {
-      type: InputType.SELECT,
+      type: InputType.MULTI_SELECT,
       required: false,
       label: 'input.descriptor.tags',
       value: tags,

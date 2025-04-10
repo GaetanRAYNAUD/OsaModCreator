@@ -1,13 +1,13 @@
-import { ImageInput } from '@components/form/ImageInput.tsx'
-import { InputProps, InputType } from '@components/layout/form.type.ts'
-import { ModLayout } from '@components/layout/ModLayout.tsx'
-import { Help } from '@mui/icons-material'
+import { ImageInput } from '@components/form/ImageInput.tsx';
+import { InputProps, InputType } from '@components/layout/form.type.ts';
+import { ModLayout } from '@components/layout/ModLayout.tsx';
+import { Help } from '@mui/icons-material';
 import {
   Autocomplete, Box, Button, CardActions, Checkbox, Chip, FormControl, InputAdornment, InputLabel, ListItemText,
   MenuItem, OutlinedInput, Select, TextField, Tooltip,
-} from '@mui/material'
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   inputs: InputProps<any>[],
@@ -17,61 +17,69 @@ type Props = {
 }
 
 export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
-  const { t } = useTranslation()
-  const [valid, setValid] = useState<boolean>(false)
+  const { t } = useTranslation();
+  const [valid, setValid] = useState<boolean>(false);
 
   useEffect(() => {
     for (const input of inputs) {
       switch (input.type) {
         case InputType.TEXT: {
           if (input.required && !input.value) {
-            setValid(false)
-            console.log(`${ input.label } is required`)
-            return
+            setValid(false);
+            console.log(`${ input.label } is required`);
+            return;
           }
 
           if (input.regex && !input.regex.test(input.value)) {
-            setValid(false)
-            console.log(`${ input.label } is invalid`)
-            return
+            setValid(false);
+            console.log(`${ input.label } is invalid`);
+            return;
           }
-          break
+          break;
         }
         case InputType.SELECT: {
-          if (input.required && (!input.value || input.value.length === 0)) {
-            setValid(false)
-            console.log(`${ input.label } is required`)
-            return
+          if (input.required && !input.value) {
+            setValid(false);
+            console.log(`${ input.label } is required`);
+            return;
           }
         }
-          break
+          break;
+        case InputType.MULTI_SELECT: {
+          if (input.required && (!input.value || input.value.length === 0)) {
+            setValid(false);
+            console.log(`${ input.label } is required`);
+            return;
+          }
+        }
+          break;
         case InputType.MULTI_TEXT: {
           if (input.required && (!input.value || input.value.length === 0)) {
-            setValid(false)
-            console.log(`${ input.label } is required`)
-            return
+            setValid(false);
+            console.log(`${ input.label } is required`);
+            return;
           }
 
           if (input.regex && input.value.some(v => !input.regex?.test(v))) {
-            setValid(false)
-            console.log(`${ input.label } is invalid`)
-            return
+            setValid(false);
+            console.log(`${ input.label } is invalid`);
+            return;
           }
         }
-          break
+          break;
         case InputType.FILE: {
           if (input.required && !input.value) {
-            setValid(false)
-            console.log(`${ input.label } is required`)
-            return
+            setValid(false);
+            console.log(`${ input.label } is required`);
+            return;
           }
-          break
+          break;
         }
       }
     }
 
-    setValid(true)
-  }, [inputs])
+    setValid(true);
+  }, [inputs]);
 
   return (
     <ModLayout>
@@ -87,7 +95,7 @@ export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
                   required={ input.required }
                   value={ input.value }
                   onChange={ input.onChange }
-                  error={ input.regex && !input.regex.test(input.value) }
+                  error={ (input.required && !input.value) || (input.regex && !input.regex.test(input.value)) }
                   slotProps={ input.tooltip ? {
                     input: {
                       endAdornment: <InputAdornment position="end">
@@ -98,8 +106,59 @@ export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
                     },
                   } : {} }
                 />
-              )
+              );
+            case InputType.NUMBER:
+              return (
+                <TextField
+                  key={ `${ input.label }${ index }` }
+                  fullWidth
+                  type="number"
+                  label={ t(input.label) }
+                  required={ input.required }
+                  value={ input.value }
+                  onChange={ input.onChange }
+                  error={ input.required && !input.value }
+                  inputProps={ {
+                    step: input.step,
+                    min: input.min,
+                    max: input.max,
+                  } }
+                  slotProps={ input.tooltip ? {
+                    inputLabel: {
+                      shrink: true,
+                    },
+                    input: {
+                      inputMode: 'numeric',
+                      endAdornment: <InputAdornment position="end">
+                        <Tooltip title={ t(input.tooltip) }>
+                          <Help />
+                        </Tooltip>
+                      </InputAdornment>,
+                    },
+                  } : {} }
+                />
+              );
             case InputType.SELECT:
+              return (
+                <FormControl fullWidth required={ input.required } key={ `${ input.label }-${ index }` }>
+                  <InputLabel id={ `label-${ input.label }${ index }` }>{ t(input.label) }</InputLabel>
+                  <Select
+                    labelId={ `label-${ input.label }${ index }` }
+                    id={ `select-${ input.label }${ index }` }
+                    value={ input.value }
+                    onChange={ input.onChange }
+                    input={ <OutlinedInput label={ t(input.label) } /> }
+                    error={ input.required && !input.value }
+                  >
+                    { input.values.map((name) => (
+                      <MenuItem key={ name } value={ name }>
+                        { input.translation ? t(input.translation(name)) : name }
+                      </MenuItem>
+                    )) }
+                  </Select>
+                </FormControl>
+              );
+            case InputType.MULTI_SELECT:
               return (
                 <FormControl fullWidth required={ input.required } key={ `${ input.label }-${ index }` }>
                   <InputLabel id={ `label-${ input.label }${ index }` }>{ t(input.label) }</InputLabel>
@@ -130,7 +189,7 @@ export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
                     )) }
                   </Select>
                 </FormControl>
-              )
+              );
             case InputType.MULTI_TEXT:
               return (
                 <Autocomplete
@@ -141,15 +200,15 @@ export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
                   options={ [] }
                   value={ input.value }
                   onChange={ (_, newValue) => {
-                    input.onChange(newValue?.map(v => v?.trim()))
+                    input.onChange(newValue?.map(v => v?.trim()));
                   } }
                   filterSelectedOptions={ false }
                   renderTags={ (value: string[], getTagProps) =>
                     <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 0.5 } }>
                       { value.map((value, index) => {
-                        const { key, ...tagProps } = getTagProps({ index })
+                        const { key, ...tagProps } = getTagProps({ index });
 
-                        return <Chip key={ key } label={ value } { ...tagProps } />
+                        return <Chip key={ key } label={ value } { ...tagProps } />;
                       }) }
                     </Box>
                   }
@@ -181,13 +240,13 @@ export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
                     />
                   ) }
                 />
-              )
+              );
             case InputType.FILE:
               return (
                 <ImageInput key={ `file-${ input.label }-${ index }` } input={ input } />
-              )
+              );
             default:
-              return <></>
+              return <></>;
           }
         })
       }
@@ -197,5 +256,5 @@ export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
         </Button>
       </CardActions>
     </ModLayout>
-  )
+  );
 }

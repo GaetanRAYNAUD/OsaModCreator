@@ -1,10 +1,12 @@
-import { SelectChangeEvent } from '@mui/material'
-import { AutocompleteValue } from '@mui/material/useAutocomplete/useAutocomplete'
-import { ChangeEvent } from 'react'
+import { SelectChangeEvent } from '@mui/material';
+import { AutocompleteValue } from '@mui/material/useAutocomplete/useAutocomplete';
+import { ChangeEvent } from 'react';
 
 export enum InputType {
   TEXT = 'TEXT',
+  NUMBER = 'NUMBER',
   SELECT = 'SELECT',
+  MULTI_SELECT = 'MULTI_SELECT',
   MULTI_TEXT = 'MULTI_TEXT',
   FILE = 'FILE',
 }
@@ -16,15 +18,33 @@ export type Input = {
   tooltip?: string,
 }
 
-export type TextInput<T> = Input & {
+export type TextInput = Input & {
   type: InputType.TEXT,
-  value: T,
+  value: string,
   onChange: (event: ChangeEvent<HTMLInputElement>) => void,
   regex?: RegExp,
 }
 
+export type NumberInput = Input & {
+  type: InputType.NUMBER,
+  value: string,
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void,
+  step?: number,
+  min?: number,
+  max?: number,
+  allowFloat?: boolean,
+}
+
 export type SelectInput<T> = Input & {
   type: InputType.SELECT,
+  onChange: (event: SelectChangeEvent<T>) => void,
+  value: T,
+  values: T[],
+  translation?: (s: string) => string,
+}
+
+export type MultiSelectInput<T> = Input & {
+  type: InputType.MULTI_SELECT,
   onChange: (event: SelectChangeEvent<T[]>) => void,
   value: T[],
   values: T[],
@@ -45,4 +65,4 @@ export type FileInput = Input & {
   maxWidth?: string | number,
 }
 
-export type InputProps<T> = TextInput<T> | SelectInput<T> | MultiTextInput<T> | FileInput;
+export type InputProps<T> = TextInput | NumberInput | SelectInput<T> | MultiSelectInput<T> | MultiTextInput<T> | FileInput;

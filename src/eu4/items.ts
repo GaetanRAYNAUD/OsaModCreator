@@ -1,5 +1,5 @@
-import { DescriptorFile, Eu4File, Eu4Folder, UnitsFolder } from '@eu4/folders.ts'
-import { getRoutes } from '@routes.ts'
+import { DescriptorFile, Eu4File, Eu4Folder, UnitFile, UnitsFolder } from '@eu4/folders.ts';
+import { getRoutes } from '@routes.ts';
 
 export type ItemCategory = {
   name: string;
@@ -12,10 +12,11 @@ export interface Item<T> {
   route: string;
   subRoute?: string;
   folder?: Eu4Folder<T>;
+  fileProvider?: (s: string) => Eu4File<T>;
   file?: Eu4File<T>;
 }
 
-const routes = getRoutes()
+const routes = getRoutes();
 
 export const itemCategories: ItemCategory[] = [
   {
@@ -50,6 +51,7 @@ export const itemCategories: ItemCategory[] = [
       name: 'units',
       route: routes.COMMON.UNITS,
       folder: UnitsFolder,
+      fileProvider: UnitFile,
     }, {
       name: 'institutions',
       route: routes.COMMON.INSTITUTIONS,
@@ -174,4 +176,4 @@ export const itemCategories: ItemCategory[] = [
       route: routes.HISTORY.WARS,
     }],
   },
-]
+];
