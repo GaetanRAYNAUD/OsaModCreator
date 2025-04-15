@@ -18,6 +18,8 @@ export const getRoutes = () => ({
     MISSION: `/${ i18n.t('routes.common.missions') }/:id`,
     TECHNOLOGIES: `/${ i18n.t('routes.common.technologies') }`,
     TECHNOLOGY: `/${ i18n.t('routes.common.technologies') }/:id`,
+    TECHNOLOGY_GROUPS: `/${ i18n.t('routes.common.technology_groups') }`,
+    TECHNOLOGY_GROUP: `/${ i18n.t('routes.common.technology_groups') }/:id`,
     UNITS: `/${ i18n.t('routes.common.units') }`,
     UNIT: `/${ i18n.t('routes.common.units') }/:id`,
     INSTITUTIONS: `/${ i18n.t('routes.common.institutions') }`,

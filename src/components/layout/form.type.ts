@@ -9,6 +9,7 @@ export enum InputType {
   MULTI_SELECT = 'MULTI_SELECT',
   MULTI_TEXT = 'MULTI_TEXT',
   FILE = 'FILE',
+  BOOLEAN = 'BOOLEAN',
 }
 
 export type Input = {
@@ -65,4 +66,11 @@ export type FileInput = Input & {
   maxWidth?: string | number,
 }
 
-export type InputProps<T> = TextInput | NumberInput | SelectInput<T> | MultiSelectInput<T> | MultiTextInput<T> | FileInput;
+export type BooleanInput = Input & {
+  type: InputType.BOOLEAN,
+  value: boolean,
+  onChange: (event: ChangeEvent<HTMLInputElement>, checked: boolean) => void,
+}
+
+export type InputProps<T> = TextInput | NumberInput | SelectInput<T> | MultiSelectInput<T> | MultiTextInput<T>
+  | FileInput | BooleanInput;

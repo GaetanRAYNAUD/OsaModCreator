@@ -1,16 +1,17 @@
-import { ModListLayout } from '@components/layout/ModListLayout.tsx'
-import { Item, ItemCategory } from '@eu4/items.ts'
-import { Descriptor } from '@eu4/types.ts'
-import { Box } from '@mui/material'
-import { CreateModPage } from '@pages/CreateMod.tsx'
-import { DescriptorPage } from '@pages/eu4/Descriptor.tsx'
+import { ModListLayout } from '@components/layout/ModListLayout.tsx';
+import { Item, ItemCategory } from '@eu4/items.ts';
+import { Descriptor } from '@eu4/types.ts';
+import { Box } from '@mui/material';
+import { CreateModPage } from '@pages/CreateMod.tsx';
+import { DescriptorPage } from '@pages/eu4/Descriptor.tsx';
+import { TechnologyGroupPage } from '@pages/eu4/TechnologyGroup.tsx';
 import { UnitPage } from '@pages/eu4/Unit.tsx';
-import { HomePage } from '@pages/Home.tsx'
-import { SelectModPage } from '@pages/SelectMod.tsx'
-import { getRoutes } from '@routes.ts'
-import * as React from 'react'
-import { createContext, useState } from 'react'
-import { Navigate, Route, Routes, useLocation } from 'react-router'
+import { HomePage } from '@pages/Home.tsx';
+import { SelectModPage } from '@pages/SelectMod.tsx';
+import { getRoutes } from '@routes.ts';
+import * as React from 'react';
+import { createContext, useState } from 'react';
+import { Navigate, Route, Routes, useLocation } from 'react-router';
 
 type GlobalState = {
   handle?: FileSystemDirectoryHandle,
@@ -22,16 +23,16 @@ type GlobalState = {
 export const StateContext = createContext<{
   globalState: GlobalState | null;
   setGlobalState: React.Dispatch<React.SetStateAction<GlobalState | null>>
-} | null>(null)
+} | null>(null);
 
 const DefaultLayout: React.FC = () => {
-  const location = useLocation()
-  const state = location.state as GlobalState
-  const ROUTES = getRoutes()
-  const [globalState, setGlobalState] = useState<GlobalState | null>(null)
+  const location = useLocation();
+  const state = location.state as GlobalState;
+  const ROUTES = getRoutes();
+  const [globalState, setGlobalState] = useState<GlobalState | null>(null);
 
   if (!globalState && state && state.handle) {
-    setGlobalState(state)
+    setGlobalState(state);
   }
 
   return (
@@ -45,12 +46,14 @@ const DefaultLayout: React.FC = () => {
             <Route path={ ROUTES.DESCRIPTOR } element={ <DescriptorPage /> } />
             <Route path={ ROUTES.COMMON.UNITS } element={ <ModListLayout /> } />
             <Route path={ ROUTES.COMMON.UNIT } element={ <UnitPage /> } />
+            <Route path={ ROUTES.COMMON.TECHNOLOGY_GROUPS } element={ <ModListLayout /> } />
+            <Route path={ ROUTES.COMMON.TECHNOLOGY_GROUP } element={ <TechnologyGroupPage /> } />
             <Route path="*" element={ <Navigate to={ ROUTES.MOD } replace /> } />
           </Routes>
         </StateContext.Provider>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default DefaultLayout
+export default DefaultLayout;

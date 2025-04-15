@@ -1,15 +1,15 @@
 import { convertObject, readFile } from '@eu4/eu4file.util.ts';
-import { AdvisorTypes, Descriptor, SteamTag, Unit } from '@eu4/types.ts';
+import { Descriptor, SteamTag, TechnologyGroups, Unit } from '@eu4/types.ts';
 import { capitalize } from '@mui/material';
 import { toList } from '@utils/objects.utils.ts';
 import { Query } from 'jomini';
 
-export class Eu4Folder<T> {
+export class Eu4Folder {
   name: string;
-  parent?: Eu4Folder<any>;
-  children: Array<Eu4Folder<any>>;
+  parent?: Eu4Folder;
+  children: Array<Eu4Folder>;
 
-  constructor(name: string, parent?: Eu4Folder<any>) {
+  constructor(name: string, parent?: Eu4Folder) {
     this.name = name;
     this.parent = parent;
     this.children = [];
@@ -36,7 +36,7 @@ export class Eu4Folder<T> {
 
   async getFolderHandle(handle: FileSystemDirectoryHandle): Promise<FileSystemDirectoryHandle> {
     const path: string[] = [];
-    let current: Eu4Folder<any> | undefined = this;
+    let current: Eu4Folder | undefined = this;
 
     while (current) {
       path.unshift(current.name);
@@ -51,16 +51,16 @@ export class Eu4Folder<T> {
   }
 }
 
-export class Eu4File<T> {
+export class Eu4File<T extends object> {
   name: string;
   reader: (root: ReturnType<Query['root']>) => T;
   writer: (t: T) => Uint8Array;
-  folder?: Eu4Folder<unknown>;
+  folder?: Eu4Folder;
 
-  constructor(name: string, reader: (root: ReturnType<Query['root']>) => T, writer: (t: T) => Uint8Array, folder?: Eu4Folder<unknown>) {
+  constructor(name: string, folder?: Eu4Folder, reader?: (root: ReturnType<Query['root']>) => T, writer?: (t: T) => Uint8Array) {
     this.name = name;
-    this.reader = reader;
-    this.writer = writer;
+    this.reader = reader ?? (root => root as T);
+    this.writer = writer ?? convertObject;
     this.folder = folder;
   }
 
@@ -84,7 +84,25 @@ export class Eu4File<T> {
   }
 }
 
-export const DescriptorFile = new Eu4File<Descriptor>('descriptor.mod', root => {
+export class Eu4FileList<T extends object> extends Eu4File<T> {
+  listExtractor: (t: T) => string[];
+  data?: T;
+
+  constructor(name: string, listExtractor: (t: T) => string[], folder?: Eu4Folder, reader?: (root: ReturnType<Query['root']>) => T, writer?: (t: T) => Uint8Array) {
+    super(name, folder, reader, writer);
+    this.listExtractor = listExtractor;
+  }
+
+  async getList(handle: FileSystemDirectoryHandle): Promise<string[]> {
+    return this.listExtractor(await this.getData(handle));
+  }
+
+  async getData(handle: FileSystemDirectoryHandle): Promise<T> {
+    return this.data ?? (this.data = await this.getFile(handle) as T);
+  }
+}
+
+export const DescriptorFile = new Eu4File<Descriptor>('descriptor.mod', undefined, root => {
   if (root['remote_file_id'] && typeof root['remote_file_id'] === 'number') {
     root['remote_file_id'] = root['remote_file_id'].toString();
   }
@@ -98,12 +116,15 @@ export const DescriptorFile = new Eu4File<Descriptor>('descriptor.mod', root => 
   root['replace_path'] = toList(root['replace_path']) ?? [];
 
   return root as Descriptor;
-}, convertObject);
+});
 
 export const CommonFolder = new Eu4Folder('common');
-export const AdvisorTypesFolder = new Eu4Folder<AdvisorTypes>('advisortypes', CommonFolder);
+
+export const AdvisorTypesFolder = new Eu4Folder('advisortypes', CommonFolder);
 export const TechnologiesFolder = new Eu4Folder('technologies', CommonFolder);
-export const UnitsFolder = new Eu4Folder<Unit>('units', CommonFolder);
-export const UnitFile = (name: string) => new Eu4File<Unit>(name, root => {
-  return root as Unit;
-}, convertObject, UnitsFolder);
+
+export const TechnologyGroupsFile = new Eu4FileList<TechnologyGroups>('technology.txt', t => Object.keys(t.groups),
+  CommonFolder);
+
+export const UnitsFolder = new Eu4Folder('units', CommonFolder);
+export const UnitFile = (name: string) => new Eu4File<Unit>(name, UnitsFolder);

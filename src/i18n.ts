@@ -51,6 +51,7 @@ i18n.use(initReactI18next).init({
             'decisions': 'common/decisions',
             'missions': 'common/missions',
             'technologies': 'common/technologies',
+            'technology_groups': 'common/technology_groups',
             'units': 'common/units',
             'institutions': 'common/institutions',
           },
@@ -131,6 +132,10 @@ i18n.use(initReactI18next).init({
             'technologies': {
               'title': 'Technologies',
               'desc': 'Technologies levels and the bonuses they gives',
+            },
+            'technology_groups': {
+              'title': 'Technology Groups',
+              'desc': 'Groups of technologies countries can belong to. Used to choose what part of the map is discovered, and units.',
             },
             'units': {
               'title': 'Units',
@@ -332,6 +337,12 @@ i18n.use(initReactI18next).init({
             'sailors': 'Number of Sailors',
             'sailors.tooltip': 'Cost in sailors to build this ship.',
             'tradePower': 'Trade Power',
+          },
+          'technology_groups': {
+            'startLevel': 'Starting technology level',
+            'primitive': 'Is the group primitive?',
+            'nationDesignerUnitType': 'Unit type in nation designer',
+            'nationDesignerUnitType.tooltip': 'Unit type when creating a nation with this group in nation designer.',
           }
         },
       },

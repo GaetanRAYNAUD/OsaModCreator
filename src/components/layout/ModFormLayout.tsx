@@ -3,20 +3,21 @@ import { InputProps, InputType } from '@components/layout/form.type.ts';
 import { ModLayout } from '@components/layout/ModLayout.tsx';
 import { Help } from '@mui/icons-material';
 import {
-  Autocomplete, Box, Button, CardActions, Checkbox, Chip, FormControl, InputAdornment, InputLabel, ListItemText,
-  MenuItem, OutlinedInput, Select, TextField, Tooltip,
+  Autocomplete, Box, Button, CardActions, Checkbox, Chip, FormControl, FormControlLabel, InputAdornment, InputLabel,
+  ListItemText, MenuItem, OutlinedInput, Select, TextField, Tooltip,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
+  name?: string;
   inputs: InputProps<any>[],
   handle: FileSystemDirectoryHandle,
   handleSubmit?: () => void,
   loading?: boolean,
 }
 
-export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
+export function ModFormLayout({ name, handleSubmit, loading, inputs }: Props) {
   const { t } = useTranslation();
   const [valid, setValid] = useState<boolean>(false);
 
@@ -75,6 +76,13 @@ export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
           }
           break;
         }
+        case InputType.BOOLEAN: {
+          if (input.required && !input.value) {
+            setValid(false);
+            console.log(`${ input.label } is required`);
+            return;
+          }
+        }
       }
     }
 
@@ -82,7 +90,7 @@ export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
   }, [inputs]);
 
   return (
-    <ModLayout>
+    <ModLayout name={ name }>
       {
         inputs.map((input: InputProps<any>, index: number) => {
           switch (input.type) {
@@ -244,6 +252,12 @@ export function ModFormLayout({ handleSubmit, loading, inputs }: Props) {
             case InputType.FILE:
               return (
                 <ImageInput key={ `file-${ input.label }-${ index }` } input={ input } />
+              );
+            case InputType.BOOLEAN:
+              return (
+                <FormControlLabel key={ `${ input.label }${ index }` }
+                                  control={ <Checkbox checked={ input.value } onChange={ input.onChange } /> }
+                                  label={ t(input.label) } required={ input.required } />
               );
             default:
               return <></>;

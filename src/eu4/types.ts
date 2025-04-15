@@ -38,6 +38,20 @@ export type Descriptor = {
   remote_file_id?: string;
 }
 
+export type TechnologyGroups = {
+  groups: Record<string, TechnologyGroup>;
+  tables: { adm_tech: string; dip_tech: string; mil_tech: string; }
+}
+
+export type TechnologyGroup = {
+  start_level: number;
+  start_cost_modifier: number;
+  is_primitive?: boolean;
+  nation_designer_unit_type?: string;
+  nation_designer_trigger?: Trigger;
+  nation_designer_cost?: { trigger: Trigger, value: number };
+}
+
 export type AdvisorTypes = Record<string, AdvisorType>;
 
 export type AdvisorType = Modifier & {

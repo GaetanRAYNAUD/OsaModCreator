@@ -12,6 +12,7 @@ export function UnitPage() {
   const routes = getRoutes();
   const { globalState } = useContext(StateContext)!;
 
+  const [name, setName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [type, setType] = useState<UnitType>(UnitType.INFANTRY);
   const [unitType, setUnitType] = useState<string>('');
@@ -36,8 +37,9 @@ export function UnitPage() {
     } else {
       (async () => {
         if (globalState.item && globalState.item.file && globalState.handle) {
-          const unit: Unit = await globalState.item.file.getFile(globalState.handle)
+          const unit: Unit = await globalState.item.file.getFile(globalState.handle);
 
+          setName(globalState.item.file.name);
           setType(unit.type);
           setUnitType(unit.unit_type ?? '');
           setManeuver(unit.maneuver ? unit.maneuver.toString() : '0');
@@ -251,6 +253,7 @@ export function UnitPage() {
 
   return (
     globalState && globalState.handle &&
-    <ModFormLayout handle={ globalState.handle } handleSubmit={ handleSubmit } loading={ loading } inputs={ inputs } />
+    <ModFormLayout name={ name } handle={ globalState.handle } handleSubmit={ handleSubmit } loading={ loading }
+                   inputs={ inputs } />
   );
 }

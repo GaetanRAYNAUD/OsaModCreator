@@ -1,33 +1,45 @@
-import { COLORS } from '@assets/styles/theme.ts'
-import { StateContext } from '@components/layout/Default.tsx'
-import { Card, Container, Grid2, Typography } from '@mui/material'
-import { getRoutes } from '@routes.ts'
-import React, { useContext, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { COLORS } from '@assets/styles/theme.ts';
+import { StateContext } from '@components/layout/Default.tsx';
+import { Card, Container, Grid2, Typography } from '@mui/material';
+import { getRoutes } from '@routes.ts';
+import React, { useContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
+  name?: string;
   dark?: boolean;
 }
 
-export function ModLayout({ children, dark = false }: React.PropsWithChildren<Props>) {
-  const { t } = useTranslation()
-  const routes = getRoutes()
-  const navigate = useNavigate()
-  const { globalState } = useContext(StateContext)!
+export function ModLayout({ children, name, dark = false }: React.PropsWithChildren<Props>) {
+  const { t } = useTranslation();
+  const routes = getRoutes();
+  const navigate = useNavigate();
+  const { globalState } = useContext(StateContext)!;
 
   useEffect(() => {
     if (!globalState || !globalState.item || !globalState.category) {
-      navigate(routes.HOME)
+      navigate(routes.HOME);
     }
-  }, [globalState, navigate])
+  }, [globalState, navigate]);
 
   useEffect(() => {
     if (globalState && globalState.descriptor && globalState.category) {
-      document.title = globalState.descriptor.name + ' - ' + t(
-        `category.${ globalState.category.name }.title`) + ' - ' + t('app.title')
+      console.log(globalState);
+      if (globalState.item) {
+        if (name) {
+          document.title = globalState.descriptor.name + ' - ' + t(
+            `category.${ globalState.category.name }.${ globalState.item.name }.title`) + ' - ' + name;
+        } else {
+          document.title = globalState.descriptor.name + ' - ' + t(
+            `category.${ globalState.category.name }.${ globalState.item.name }.title`);
+        }
+      } else {
+        document.title = globalState.descriptor.name + ' - ' + t(
+          `category.${ globalState.category.name }.title`) + ' - ' + t('app.title');
+      }
     }
-  }, [globalState, t])
+  }, [globalState, t, name]);
 
   return (
     (!globalState || !globalState.descriptor || !globalState.item || !globalState.category) ? <></> : (
@@ -36,7 +48,8 @@ export function ModLayout({ children, dark = false }: React.PropsWithChildren<Pr
           { globalState.descriptor.name } - { t('app.title') }
         </Typography>
         <Typography variant="h4" gutterBottom>
-          { t(`category.${ globalState.category.name }.${ globalState.item.name }.title`) }
+          { t(
+            `category.${ globalState.category.name }.${ globalState.item.name }.title`) + `${ name && name.length > 0 ? ' - ' + name : '' }` }
         </Typography>
         <Card sx={ { backgroundColor: dark ? COLORS.SECONDARY_DARK : COLORS.SECONDARY_MAIN, padding: 3 } }>
           <Grid2 container spacing={ 2 }>
@@ -45,5 +58,5 @@ export function ModLayout({ children, dark = false }: React.PropsWithChildren<Pr
         </Card>
       </Container>
     )
-  )
+  );
 }

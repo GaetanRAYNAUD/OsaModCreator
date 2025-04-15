@@ -29,7 +29,7 @@ export function writeKeyValue(writer: Writer, key: string, value: any) {
   writeAny(writer, value, key)
 }
 
-export function convertObject(obj: object): Uint8Array {
+export function convertObject<T extends object>(obj: T): Uint8Array {
   return jomini.write((writer) => writeEntries(writer, obj));
 }
 
@@ -39,7 +39,7 @@ export function writeObject(writer: Writer, obj: object) {
   writer.write_end()
 }
 
-function writeEntries(writer: Writer, obj: object) {
+function writeEntries<T extends object>(writer: Writer, obj: T) {
   for (const [key, value] of Object.entries(obj)) {
     if (FLAT_ARRAY_KEYS.includes(key) && Array.isArray(value)) {
       for (const item of value) {
