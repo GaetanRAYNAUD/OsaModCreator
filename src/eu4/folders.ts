@@ -3,6 +3,8 @@ import { Descriptor, SteamTag, TechnologyGroups, Unit } from '@eu4/types.ts';
 import { capitalize } from '@mui/material';
 import { toList } from '@utils/objects.utils.ts';
 import { Query } from 'jomini';
+import { GlobalState } from '@components/layout/Default.tsx';
+import * as React from 'react';
 
 export class Eu4Folder {
   name: string;
@@ -125,6 +127,16 @@ export const TechnologiesFolder = new Eu4Folder('technologies', CommonFolder);
 
 export const TechnologyGroupsFile = new Eu4FileList<TechnologyGroups>('technology.txt', t => Object.keys(t.groups),
   CommonFolder);
+export const loadTechnologyGroups = async (globalState: GlobalState, setGlobalState: React.Dispatch<React.SetStateAction<GlobalState | null>>, force?: boolean = false): Promise<TechnologyGroups | undefined> => {
+  if (globalState.handle && (force || !globalState.technologyGroups)) {
+    const groups = await TechnologyGroupsFile.getData(globalState.handle);
+    setGlobalState({ ...globalState, technologyGroups: groups });
+
+    return groups;
+  }
+
+  return undefined;
+};
 
 export const UnitsFolder = new Eu4Folder('units', CommonFolder);
 export const UnitFile = (name: string) => new Eu4File<Unit>(name, UnitsFolder);

@@ -149,7 +149,6 @@ export function DescriptorPage() {
   ]
 
   return (
-    globalState && globalState.handle &&
-    <ModFormLayout handle={ globalState.handle } handleSubmit={ handleSubmit } loading={ loading } inputs={ inputs } />
+    <ModFormLayout handleSubmit={ handleSubmit } submitting={ loading } inputs={ inputs } />
   )
 }

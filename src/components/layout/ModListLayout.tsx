@@ -9,10 +9,12 @@ import { useNavigate } from 'react-router-dom';
 
 export function ModListLayout() {
   const { globalState, setGlobalState } = useContext(StateContext)!;
-  const [files, setFiles] = useState<string[]>([]);
+  const [files, setFiles] = useState<string[]>();
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    setLoading(true);
     (async () => {
       if (globalState && globalState.handle && globalState.item) {
         if (globalState.item.folder) {
@@ -21,10 +23,13 @@ export function ModListLayout() {
           setFiles(await globalState.item.file.getList(globalState.handle));
         }
       }
+
+      setLoading(false);
     })();
   }, [globalState]);
 
   const onClick = (name: string): void => {
+    setLoading(true);
     if (globalState && globalState.handle && globalState.item) {
       if (globalState.item.folder && globalState.item.fileProvider) {
         setGlobalState({
@@ -38,25 +43,26 @@ export function ModListLayout() {
         navigate(name);
       }
     }
+    setLoading(false);
   };
 
   return (
-    <ModLayout dark>
+    <ModLayout dark loading={loading}>
       {
-        files.map(file => (
-          <Grid2 key={ file } justifyContent="center" size={ 12 }
-                 sx={ { backgroundColor: COLORS.SECONDARY_DARK } }>
+        files && files.map(file => (
+          <Grid2 key={file} justifyContent="center" size={12}
+                 sx={{ backgroundColor: COLORS.SECONDARY_DARK }}>
             <Card
-              sx={ {
+              sx={{
                 height: '100%',
                 cursor: 'pointer',
-              } }
-              onClick={ () => onClick(file) }
+              }}
+              onClick={() => onClick(file)}
             >
               <CardActionArea>
-                <CardHeader title={ file } slotProps={ { title: { variant: 'h5' } } }
-                            action={ <Avatar
-                              sx={ { backgroundColor: 'white', color: COLORS.PRIMARY_MAIN } }><Edit /></Avatar> } />
+                <CardHeader title={file} slotProps={{ title: { variant: 'h5' } }}
+                            action={<Avatar
+                              sx={{ backgroundColor: 'white', color: COLORS.PRIMARY_MAIN }}><Edit /></Avatar>} />
               </CardActionArea>
             </Card>
           </Grid2>

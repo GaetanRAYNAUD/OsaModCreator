@@ -1,10 +1,25 @@
 import { ImageInput } from '@components/form/ImageInput.tsx';
 import { InputProps, InputType } from '@components/layout/form.type.ts';
 import { ModLayout } from '@components/layout/ModLayout.tsx';
-import { Help } from '@mui/icons-material';
+import { Clear, Help } from '@mui/icons-material';
 import {
-  Autocomplete, Box, Button, CardActions, Checkbox, Chip, FormControl, FormControlLabel, InputAdornment, InputLabel,
-  ListItemText, MenuItem, OutlinedInput, Select, TextField, Tooltip,
+  Autocomplete,
+  Box,
+  Button,
+  CardActions,
+  Checkbox,
+  Chip,
+  FormControl,
+  FormControlLabel,
+  Icon,
+  InputAdornment,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  TextField,
+  Tooltip,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,12 +27,12 @@ import { useTranslation } from 'react-i18next';
 type Props = {
   name?: string;
   inputs: InputProps<any>[],
-  handle: FileSystemDirectoryHandle,
   handleSubmit?: () => void,
+  submitting?: boolean,
   loading?: boolean,
 }
 
-export function ModFormLayout({ name, handleSubmit, loading, inputs }: Props) {
+export function ModFormLayout({ name, handleSubmit, submitting = false, inputs, loading = false }: Props) {
   const { t } = useTranslation();
   const [valid, setValid] = useState<boolean>(false);
 
@@ -27,13 +42,13 @@ export function ModFormLayout({ name, handleSubmit, loading, inputs }: Props) {
         case InputType.TEXT: {
           if (input.required && !input.value) {
             setValid(false);
-            console.log(`${ input.label } is required`);
+            console.log(`${input.label} is required`);
             return;
           }
 
           if (input.regex && !input.regex.test(input.value)) {
             setValid(false);
-            console.log(`${ input.label } is invalid`);
+            console.log(`${input.label} is invalid`);
             return;
           }
           break;
@@ -41,7 +56,7 @@ export function ModFormLayout({ name, handleSubmit, loading, inputs }: Props) {
         case InputType.SELECT: {
           if (input.required && !input.value) {
             setValid(false);
-            console.log(`${ input.label } is required`);
+            console.log(`${input.label} is required`);
             return;
           }
         }
@@ -49,7 +64,7 @@ export function ModFormLayout({ name, handleSubmit, loading, inputs }: Props) {
         case InputType.MULTI_SELECT: {
           if (input.required && (!input.value || input.value.length === 0)) {
             setValid(false);
-            console.log(`${ input.label } is required`);
+            console.log(`${input.label} is required`);
             return;
           }
         }
@@ -57,13 +72,13 @@ export function ModFormLayout({ name, handleSubmit, loading, inputs }: Props) {
         case InputType.MULTI_TEXT: {
           if (input.required && (!input.value || input.value.length === 0)) {
             setValid(false);
-            console.log(`${ input.label } is required`);
+            console.log(`${input.label} is required`);
             return;
           }
 
           if (input.regex && input.value.some(v => !input.regex?.test(v))) {
             setValid(false);
-            console.log(`${ input.label } is invalid`);
+            console.log(`${input.label} is invalid`);
             return;
           }
         }
@@ -71,7 +86,7 @@ export function ModFormLayout({ name, handleSubmit, loading, inputs }: Props) {
         case InputType.FILE: {
           if (input.required && !input.value) {
             setValid(false);
-            console.log(`${ input.label } is required`);
+            console.log(`${input.label} is required`);
             return;
           }
           break;
@@ -79,7 +94,7 @@ export function ModFormLayout({ name, handleSubmit, loading, inputs }: Props) {
         case InputType.BOOLEAN: {
           if (input.required && !input.value) {
             setValid(false);
-            console.log(`${ input.label } is required`);
+            console.log(`${input.label} is required`);
             return;
           }
         }
@@ -90,153 +105,178 @@ export function ModFormLayout({ name, handleSubmit, loading, inputs }: Props) {
   }, [inputs]);
 
   return (
-    <ModLayout name={ name }>
+    <ModLayout name={name} loading={loading}>
       {
         inputs.map((input: InputProps<any>, index: number) => {
           switch (input.type) {
             case InputType.TEXT:
               return (
                 <TextField
-                  key={ `${ input.label }${ index }` }
+                  key={`${input.label}${index}`}
                   fullWidth
-                  label={ t(input.label) }
-                  required={ input.required }
-                  value={ input.value }
-                  onChange={ input.onChange }
-                  error={ (input.required && !input.value) || (input.regex && !input.regex.test(input.value)) }
-                  slotProps={ input.tooltip ? {
+                  label={t(input.label)}
+                  required={input.required}
+                  value={input.value}
+                  onChange={input.onChange}
+                  error={(input.required && !input.value) || (input.regex && !input.regex.test(input.value))}
+                  slotProps={input.tooltip ? {
                     input: {
                       endAdornment: <InputAdornment position="end">
-                        <Tooltip title={ t(input.tooltip) }>
+                        <Tooltip title={t(input.tooltip)}>
                           <Help />
                         </Tooltip>
                       </InputAdornment>,
                     },
-                  } : {} }
+                  } : {}}
                 />
               );
             case InputType.NUMBER:
               return (
                 <TextField
-                  key={ `${ input.label }${ index }` }
+                  key={`${input.label}${index}`}
                   fullWidth
                   type="number"
-                  label={ t(input.label) }
-                  required={ input.required }
-                  value={ input.value }
-                  onChange={ input.onChange }
-                  error={ input.required && !input.value }
-                  inputProps={ {
+                  label={t(input.label)}
+                  required={input.required}
+                  value={input.value}
+                  onChange={input.onChange}
+                  error={input.required && !input.value}
+                  inputProps={{
                     step: input.step,
                     min: input.min,
                     max: input.max,
-                  } }
-                  slotProps={ input.tooltip ? {
+                  }}
+                  slotProps={input.tooltip ? {
                     inputLabel: {
                       shrink: true,
                     },
                     input: {
                       inputMode: 'numeric',
                       endAdornment: <InputAdornment position="end">
-                        <Tooltip title={ t(input.tooltip) }>
+                        <Tooltip title={t(input.tooltip)}>
                           <Help />
                         </Tooltip>
                       </InputAdornment>,
                     },
-                  } : {} }
+                  } : {}}
                 />
               );
             case InputType.SELECT:
               return (
-                <FormControl fullWidth required={ input.required } key={ `${ input.label }-${ index }` }>
-                  <InputLabel id={ `label-${ input.label }${ index }` }>{ t(input.label) }</InputLabel>
+                <FormControl fullWidth required={input.required} key={`${input.label}-${index}`}>
+                  <InputLabel id={`label-${input.label}${index}`}>{t(input.label)}</InputLabel>
                   <Select
-                    labelId={ `label-${ input.label }${ index }` }
-                    id={ `select-${ input.label }${ index }` }
-                    value={ input.value }
-                    onChange={ input.onChange }
-                    input={ <OutlinedInput label={ t(input.label) } /> }
-                    error={ input.required && !input.value }
+                    labelId={`label-${input.label}${index}`}
+                    id={`select-${input.label}${index}`}
+                    value={input.value}
+                    onChange={input.onChange}
+                    input={<OutlinedInput label={t(input.label)} />}
+                    error={input.required && !input.value}
+                    endAdornment={
+                      input.tooltip || !input.required ? (
+                        <InputAdornment position="end" sx={{ position: 'absolute', right: 32 }}>
+                          {
+                            input.tooltip ? (
+                              <Tooltip title={t(input.tooltip)}>
+                                <Help />
+                              </Tooltip>
+                            ) : (<></>)
+                          }
+                          {
+                            !input.required ? (
+                              <Icon
+                                onClick={() => {
+                                  input.onChange(undefined);
+                                }}
+                                sx={{ cursor: 'pointer' }}
+                              >
+                                <Clear></Clear>
+                              </Icon>
+                            ) : (<></>)
+                          }
+                        </InputAdornment>
+                      ) : (<></>)
+                    }
                   >
-                    { input.values.map((name) => (
-                      <MenuItem key={ name } value={ name }>
-                        { input.translation ? t(input.translation(name)) : name }
+                    {input.values.map((name) => (
+                      <MenuItem key={name} value={name}>
+                        {input.translation ? t(input.translation(name)) : name}
                       </MenuItem>
-                    )) }
+                    ))}
                   </Select>
                 </FormControl>
               );
             case InputType.MULTI_SELECT:
               return (
-                <FormControl fullWidth required={ input.required } key={ `${ input.label }-${ index }` }>
-                  <InputLabel id={ `label-${ input.label }${ index }` }>{ t(input.label) }</InputLabel>
+                <FormControl fullWidth required={input.required} key={`${input.label}-${index}`}>
+                  <InputLabel id={`label-${input.label}${index}`}>{t(input.label)}</InputLabel>
                   <Select
-                    labelId={ `label-${ input.label }${ index }` }
-                    id={ `select-${ input.label }${ index }` }
+                    labelId={`label-${input.label}${index}`}
+                    id={`select-${input.label}${index}`}
                     multiple
-                    value={ input.value }
-                    onChange={ input.onChange }
-                    input={ <OutlinedInput label={ t(input.label) } /> }
-                    error={ input.required && (!input.value || input.value.length === 0) }
-                    renderValue={ (selected) => (
-                      <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 0.5 } }>
-                        { selected.map((value) => (
-                          <Chip key={ value } label={ value } />
-                        )) }
+                    value={input.value}
+                    onChange={input.onChange}
+                    input={<OutlinedInput label={t(input.label)} />}
+                    error={input.required && (!input.value || input.value.length === 0)}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
                       </Box>
-                    ) }
+                    )}
                   >
-                    { input.values.map((name) => (
+                    {input.values.map((name) => (
                       <MenuItem
-                        key={ name }
-                        value={ name }
+                        key={name}
+                        value={name}
                       >
-                        <Checkbox checked={ input.value.includes(name) } size="small" />
-                        <ListItemText primary={ name } />
+                        <Checkbox checked={input.value.includes(name)} size="small" />
+                        <ListItemText primary={name} />
                       </MenuItem>
-                    )) }
+                    ))}
                   </Select>
                 </FormControl>
               );
             case InputType.MULTI_TEXT:
               return (
                 <Autocomplete
-                  key={ `multi-text-${ input.label }` }
+                  key={`multi-text-${input.label}`}
                   multiple
                   freeSolo
                   fullWidth
-                  options={ [] }
-                  value={ input.value }
-                  onChange={ (_, newValue) => {
+                  options={[]}
+                  value={input.value}
+                  onChange={(_, newValue) => {
                     input.onChange(newValue?.map(v => v?.trim()));
-                  } }
-                  filterSelectedOptions={ false }
-                  renderTags={ (value: string[], getTagProps) =>
-                    <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 0.5 } }>
-                      { value.map((value, index) => {
+                  }}
+                  filterSelectedOptions={false}
+                  renderTags={(value: string[], getTagProps) =>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                      {value.map((value, index) => {
                         const { key, ...tagProps } = getTagProps({ index });
 
-                        return <Chip key={ key } label={ value } { ...tagProps } />;
-                      }) }
+                        return <Chip key={key} label={value} {...tagProps} />;
+                      })}
                     </Box>
                   }
-                  renderInput={ (params) => (
+                  renderInput={(params) => (
                     <TextField
-                      { ...params }
+                      {...params}
                       variant="outlined"
-                      label={ t(input.label) }
-                      placeholder={ t(input.label) }
-                      slotProps={ input.tooltip ? {
+                      label={t(input.label)}
+                      placeholder={t(input.label)}
+                      slotProps={input.tooltip ? {
                         input: {
                           ...params.InputProps,
                           endAdornment: (
                             <>
                               <InputAdornment position="end">
-                                <Tooltip title={ t(input.tooltip) }>
+                                <Tooltip title={t(input.tooltip)}>
                                   <Help />
                                 </Tooltip>
                               </InputAdornment>
-                              { params.InputProps.endAdornment }
+                              {params.InputProps.endAdornment}
                             </>
                           ),
                         },
@@ -244,29 +284,29 @@ export function ModFormLayout({ name, handleSubmit, loading, inputs }: Props) {
                         input: {
                           ...params.InputProps,
                         },
-                      } }
+                      }}
                     />
-                  ) }
+                  )}
                 />
               );
             case InputType.FILE:
               return (
-                <ImageInput key={ `file-${ input.label }-${ index }` } input={ input } />
+                <ImageInput key={`file-${input.label}-${index}`} input={input} />
               );
             case InputType.BOOLEAN:
               return (
-                <FormControlLabel key={ `${ input.label }${ index }` }
-                                  control={ <Checkbox checked={ input.value } onChange={ input.onChange } /> }
-                                  label={ t(input.label) } required={ input.required } />
+                <FormControlLabel key={`${input.label}${index}`}
+                                  control={<Checkbox checked={input.value} onChange={input.onChange} />}
+                                  label={t(input.label)} required={input.required} />
               );
             default:
               return <></>;
           }
         })
       }
-      <CardActions sx={ { justifyContent: 'center', width: '100%' } }>
-        <Button variant="contained" color="primary" onClick={ handleSubmit } loading={ loading } disabled={ !valid }>
-          { t('save') }
+      <CardActions sx={{ justifyContent: 'center', width: '100%' }}>
+        <Button variant="contained" color="primary" onClick={handleSubmit} loading={submitting} disabled={!valid}>
+          {t('save')}
         </Button>
       </CardActions>
     </ModLayout>

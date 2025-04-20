@@ -1,6 +1,6 @@
 import { ModListLayout } from '@components/layout/ModListLayout.tsx';
 import { Item, ItemCategory } from '@eu4/items.ts';
-import { Descriptor } from '@eu4/types.ts';
+import { Descriptor, TechnologyGroups } from '@eu4/types.ts';
 import { Box } from '@mui/material';
 import { CreateModPage } from '@pages/CreateMod.tsx';
 import { DescriptorPage } from '@pages/eu4/Descriptor.tsx';
@@ -13,11 +13,12 @@ import * as React from 'react';
 import { createContext, useState } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 
-type GlobalState = {
+export type GlobalState = {
   handle?: FileSystemDirectoryHandle,
   descriptor?: Descriptor,
   category?: ItemCategory,
   item?: Item<any>,
+  technologyGroups?: TechnologyGroups
 }
 
 export const StateContext = createContext<{

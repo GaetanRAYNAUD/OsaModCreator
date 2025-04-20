@@ -6,14 +6,15 @@ import { SelectChangeEvent } from '@mui/material';
 import { getRoutes } from '@routes.ts';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loadTechnologyGroups } from '@eu4/folders.ts';
 
 export function UnitPage() {
   const navigate = useNavigate();
   const routes = getRoutes();
-  const { globalState } = useContext(StateContext)!;
+  const { globalState, setGlobalState } = useContext(StateContext)!;
 
   const [name, setName] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const [type, setType] = useState<UnitType>(UnitType.INFANTRY);
   const [unitType, setUnitType] = useState<string>('');
   const [maneuver, setManeuver] = useState<string>('0');
@@ -37,6 +38,7 @@ export function UnitPage() {
     } else {
       (async () => {
         if (globalState.item && globalState.item.file && globalState.handle) {
+          await loadTechnologyGroups(globalState, setGlobalState);
           const unit: Unit = await globalState.item.file.getFile(globalState.handle);
 
           setName(globalState.item.file.name);
@@ -62,7 +64,7 @@ export function UnitPage() {
   }, [globalState]);
 
   const handleSubmit = async () => {
-    setLoading(true);
+    setSubmitting(true);
 
     if (globalState && globalState.item && globalState.item.file && globalState.handle) {
       const unit: Unit = await globalState.item.file.getFile(globalState.handle);
@@ -104,27 +106,36 @@ export function UnitPage() {
       await globalState.item.file.writeFile(globalState.handle, unit);
     }
 
-    setLoading(false);
+    setSubmitting(false);
   };
 
   const inputs: InputProps<any>[] = [
     {
       type: InputType.SELECT,
-      required: false,
+      required: true,
       label: 'input.unit.type',
       value: type,
-      onChange: (event: SelectChangeEvent<UnitType>) => {
-        setType(event.target.value as UnitType);
+      onChange: (event: SelectChangeEvent<UnitType> | undefined) => {
+        if (event) {
+          setType(event.target.value as UnitType);
+        }
       },
       values: Object.values(UnitType),
-      translation: s => `unit.type.${ s }`,
+      translation: s => `unit.type.${s}`,
     },
     {
-      type: InputType.TEXT,
+      type: InputType.SELECT,
       required: false,
       label: 'input.unit.unitType',
       value: unitType,
-      onChange: (event: ChangeEvent<HTMLInputElement>) => setUnitType(event.target.value),
+      onChange: (event: SelectChangeEvent<HTMLInputElement> | undefined) => {
+        if (event) {
+          setUnitType(event.target.value as string)
+        } else {
+          setUnitType('');
+        }
+      },
+      values: Object.keys(globalState?.technologyGroups?.groups ?? {}),
       tooltip: 'input.unit.unitType.tooltip',
     },
   ];
@@ -252,8 +263,7 @@ export function UnitPage() {
   }
 
   return (
-    globalState && globalState.handle &&
-    <ModFormLayout name={ name } handle={ globalState.handle } handleSubmit={ handleSubmit } loading={ loading }
-                   inputs={ inputs } />
+    <ModFormLayout name={name} handleSubmit={handleSubmit} submitting={submitting} inputs={inputs}
+                   loading={!globalState || !globalState.technologyGroups || name.length === 0} />
   );
 }

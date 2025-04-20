@@ -38,7 +38,7 @@ export type NumberInput = Input & {
 
 export type SelectInput<T> = Input & {
   type: InputType.SELECT,
-  onChange: (event: SelectChangeEvent<T>) => void,
+  onChange: (event: SelectChangeEvent<T> | undefined) => void,
   value: T,
   values: T[],
   translation?: (s: string) => string,

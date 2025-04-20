@@ -1,7 +1,7 @@
 import { StateContext } from '@components/layout/Default.tsx';
 import { InputProps, InputType } from '@components/layout/form.type.ts';
 import { ModFormLayout } from '@components/layout/ModFormLayout.tsx';
-import { Eu4FileList } from '@eu4/folders';
+import { Eu4FileList, loadTechnologyGroups } from '@eu4/folders';
 import { TechnologyGroups } from '@eu4/types.ts';
 import { getRoutes } from '@routes.ts';
 import { cleanBlank } from '@utils/strings.utils.ts';
@@ -14,9 +14,9 @@ export function TechnologyGroupPage() {
   const routes = getRoutes();
   const { id } = useParams();
   const { t } = useTranslation();
-  const { globalState } = useContext(StateContext)!;
+  const { globalState, setGlobalState } = useContext(StateContext)!;
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const [startLevel, setStartLevel] = useState<string>('0');
   const [primitive, setPrimitive] = useState<boolean>(false);
   const [nationDesignerUnitType, setNationDesignerUnitType] = useState<string>('0');
@@ -27,7 +27,12 @@ export function TechnologyGroupPage() {
     } else {
       (async () => {
         if (id && globalState.item && globalState.item.file && globalState.handle && globalState.item.file instanceof Eu4FileList) {
-          const groups: TechnologyGroups = await globalState.item.file.getData(globalState.handle);
+          const groups: TechnologyGroups | undefined = await loadTechnologyGroups(globalState, setGlobalState, true);
+
+          if (!groups) {
+            return;
+          }
+
           const group = groups.groups[id];
 
           if (!group) {
@@ -36,7 +41,7 @@ export function TechnologyGroupPage() {
 
           if (globalState && globalState.descriptor && globalState.category && globalState.item) {
             document.title = globalState.descriptor.name + ' - ' + t(
-                `category.${ globalState.category.name }.${ globalState.item.name }.title`) + ' - ' + id;
+              `category.${globalState.category.name}.${globalState.item.name}.title`) + ' - ' + id;
           }
 
           setStartLevel(group.start_level ? group.start_level.toString() : '0');
@@ -48,7 +53,7 @@ export function TechnologyGroupPage() {
   }, [globalState, id]);
 
   const handleSubmit = async () => {
-    setLoading(true);
+    setSubmitting(true);
 
     if (id && globalState && globalState.item && globalState.item.file && globalState.handle && globalState.item.file instanceof Eu4FileList) {
       const groups: TechnologyGroups = await globalState.item.file.getData(globalState.handle);
@@ -67,7 +72,7 @@ export function TechnologyGroupPage() {
       await globalState.item.file.writeFile(globalState.handle, groups);
     }
 
-    setLoading(false);
+    setSubmitting(false);
   };
 
   const inputs: InputProps<any>[] = [
@@ -97,8 +102,7 @@ export function TechnologyGroupPage() {
   ];
 
   return (
-    globalState && globalState.handle &&
-    <ModFormLayout name={ id } handle={ globalState.handle } handleSubmit={ handleSubmit } loading={ loading }
-                   inputs={ inputs } />
+    <ModFormLayout name={id} handleSubmit={handleSubmit} submitting={submitting}
+                   inputs={inputs} loading={!globalState || !globalState.technologyGroups} />
   );
 }

@@ -5,13 +5,15 @@ import { getRoutes } from '@routes.ts';
 import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import AbsoluteLoader from '@components/AbsoluteLoader.tsx';
 
 type Props = {
   name?: string;
   dark?: boolean;
+  loading?: boolean;
 }
 
-export function ModLayout({ children, name, dark = false }: React.PropsWithChildren<Props>) {
+export function ModLayout({ children, name, dark = false, loading = false }: React.PropsWithChildren<Props>) {
   const { t } = useTranslation();
   const routes = getRoutes();
   const navigate = useNavigate();
@@ -25,7 +27,6 @@ export function ModLayout({ children, name, dark = false }: React.PropsWithChild
 
   useEffect(() => {
     if (globalState && globalState.descriptor && globalState.category) {
-      console.log(globalState);
       if (globalState.item) {
         if (name) {
           document.title = globalState.descriptor.name + ' - ' + t(
@@ -51,11 +52,17 @@ export function ModLayout({ children, name, dark = false }: React.PropsWithChild
           { t(
             `category.${ globalState.category.name }.${ globalState.item.name }.title`) + `${ name && name.length > 0 ? ' - ' + name : '' }` }
         </Typography>
-        <Card sx={ { backgroundColor: dark ? COLORS.SECONDARY_DARK : COLORS.SECONDARY_MAIN, padding: 3 } }>
-          <Grid2 container spacing={ 2 }>
-            { children }
-          </Grid2>
-        </Card>
+        {
+          loading ? (
+            <AbsoluteLoader />
+          ) : (
+            <Card sx={ { backgroundColor: dark ? COLORS.SECONDARY_DARK : COLORS.SECONDARY_MAIN, padding: 3 } }>
+              <Grid2 container spacing={ 2 }>
+                { children }
+              </Grid2>
+            </Card>
+          )
+        }
       </Container>
     )
   );
