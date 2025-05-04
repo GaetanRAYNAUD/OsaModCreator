@@ -1,7 +1,7 @@
 import { COLORS } from '@assets/styles/theme.ts'
 import AbsoluteLoader from '@components/AbsoluteLoader.tsx'
 import { StateContext } from '@components/layout/Default.tsx'
-import { DescriptorFile } from '@eu4/folders.ts'
+import { DescriptorFile, loadProvinces } from '@eu4/folders.ts';
 import { Item, itemCategories, ItemCategory } from '@eu4/items.ts'
 import { Descriptor } from '@eu4/types.ts'
 import { ArrowDropDown } from '@mui/icons-material'
@@ -23,6 +23,7 @@ export function ModHomePage() {
     (async () => {
       if (globalState?.handle && !globalState.descriptor) {
         setDescriptor(await DescriptorFile.getFile(globalState.handle))
+        await loadProvinces(globalState, setGlobalState);
       }
     })()
   }, [globalState])

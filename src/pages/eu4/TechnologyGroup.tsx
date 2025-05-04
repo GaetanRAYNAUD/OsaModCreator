@@ -16,6 +16,7 @@ export function TechnologyGroupPage() {
   const { t } = useTranslation();
   const { globalState, setGlobalState } = useContext(StateContext)!;
 
+  const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [startLevel, setStartLevel] = useState<string>('0');
   const [primitive, setPrimitive] = useState<boolean>(false);
@@ -26,18 +27,23 @@ export function TechnologyGroupPage() {
       navigate(routes.HOME);
     } else {
       (async () => {
-        if (id && globalState.item && globalState.item.file && globalState.handle && globalState.item.file instanceof Eu4FileList) {
+        if (id && globalState.item && globalState.item.file && globalState.handle && globalState.item.file instanceof Eu4FileList && !loading) {
+          setLoading(true);
           const groups: TechnologyGroups | undefined = await loadTechnologyGroups(globalState, setGlobalState, true);
 
           if (!groups) {
             return;
           }
 
+          console.log(groups);
+
           const group = groups.groups[id];
 
           if (!group) {
             return;
           }
+
+          console.log(group);
 
           if (globalState && globalState.descriptor && globalState.category && globalState.item) {
             document.title = globalState.descriptor.name + ' - ' + t(
@@ -66,8 +72,6 @@ export function TechnologyGroupPage() {
       group.start_level = Number.parseInt(startLevel);
       group.is_primitive = primitive ? primitive : undefined;
       group.nation_designer_unit_type = cleanBlank(nationDesignerUnitType) ?? undefined;
-
-      console.log(group);
 
       await globalState.item.file.writeFile(globalState.handle, groups);
     }
@@ -103,6 +107,6 @@ export function TechnologyGroupPage() {
 
   return (
     <ModFormLayout name={id} handleSubmit={handleSubmit} submitting={submitting}
-                   inputs={inputs} loading={!globalState || !globalState.technologyGroups} />
+                   inputs={inputs} loading={!loading || !globalState || !globalState.technologyGroups} />
   );
 }

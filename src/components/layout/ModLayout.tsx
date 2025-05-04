@@ -57,7 +57,7 @@ export function ModLayout({ children, name, dark = false, loading = false }: Rea
             <AbsoluteLoader />
           ) : (
             <Card sx={ { backgroundColor: dark ? COLORS.SECONDARY_DARK : COLORS.SECONDARY_MAIN, padding: 3 } }>
-              <Grid2 container spacing={ 2 }>
+              <Grid2 container spacing={ 2 } flexDirection='column'>
                 { children }
               </Grid2>
             </Card>

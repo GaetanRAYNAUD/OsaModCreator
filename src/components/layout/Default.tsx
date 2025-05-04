@@ -1,10 +1,11 @@
 import { ModListLayout } from '@components/layout/ModListLayout.tsx';
 import { Item, ItemCategory } from '@eu4/items.ts';
-import { Descriptor, TechnologyGroups } from '@eu4/types.ts';
+import { Descriptor, Province, TechnologyGroups } from '@eu4/types.ts';
 import { Box } from '@mui/material';
 import { CreateModPage } from '@pages/CreateMod.tsx';
 import { DescriptorPage } from '@pages/eu4/Descriptor.tsx';
 import { TechnologyGroupPage } from '@pages/eu4/TechnologyGroup.tsx';
+import { TradeNodePage } from '@pages/eu4/TradeNode.tsx';
 import { UnitPage } from '@pages/eu4/Unit.tsx';
 import { HomePage } from '@pages/Home.tsx';
 import { SelectModPage } from '@pages/SelectMod.tsx';
@@ -18,7 +19,8 @@ export type GlobalState = {
   descriptor?: Descriptor,
   category?: ItemCategory,
   item?: Item<any>,
-  technologyGroups?: TechnologyGroups
+  technologyGroups?: TechnologyGroups;
+  provinces?: Record<number, Province>;
 }
 
 export const StateContext = createContext<{
@@ -49,6 +51,9 @@ const DefaultLayout: React.FC = () => {
             <Route path={ ROUTES.COMMON.UNIT } element={ <UnitPage /> } />
             <Route path={ ROUTES.COMMON.TECHNOLOGY_GROUPS } element={ <ModListLayout /> } />
             <Route path={ ROUTES.COMMON.TECHNOLOGY_GROUP } element={ <TechnologyGroupPage /> } />
+            <Route path={ ROUTES.ECONOMY.TRADE_NODES } element={ <ModListLayout /> } />
+            <Route path={ ROUTES.ECONOMY.TRADE_NODES_FILE } element={ <ModListLayout /> } />
+            <Route path={ ROUTES.ECONOMY.TRADE_NODE } element={ <TradeNodePage /> } />
             <Route path="*" element={ <Navigate to={ ROUTES.MOD } replace /> } />
           </Routes>
         </StateContext.Provider>

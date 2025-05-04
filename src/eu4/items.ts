@@ -1,5 +1,6 @@
 import {
-  DescriptorFile, Eu4File, Eu4FileList, Eu4Folder, TechnologyGroupsFile, UnitFile, UnitsFolder,
+  DescriptorFile, Eu4File, Eu4FileList, Eu4Folder, TechnologyGroupsFile, TradeNodeFile, TradeNodesFolder, UnitFile,
+  UnitsFolder,
 } from '@eu4/folders.ts';
 import { getRoutes } from '@routes.ts';
 
@@ -16,7 +17,7 @@ export interface Item<T extends object> {
   folder?: Eu4Folder;
   fileProvider?: (s: string) => Eu4File<T>;
   file?: Eu4File<T> | Eu4FileList<T>;
-  fileList?: boolean;
+  noFileAllowed?: boolean;
 }
 
 const routes = getRoutes();
@@ -54,7 +55,7 @@ export const itemCategories: ItemCategory[] = [
       name: 'technology_groups',
       route: routes.COMMON.TECHNOLOGY_GROUPS,
       file: TechnologyGroupsFile,
-      fileList: true,
+      noFileAllowed: true,
     }, {
       name: 'units',
       route: routes.COMMON.UNITS,
@@ -82,6 +83,8 @@ export const itemCategories: ItemCategory[] = [
     }, {
       name: 'trade_nodes',
       route: routes.ECONOMY.TRADE_NODES,
+      folder: TradeNodesFolder,
+      fileProvider: TradeNodeFile,
     }, {
       name: 'trade_companies',
       route: routes.ECONOMY.TRADE_COMPANIES,

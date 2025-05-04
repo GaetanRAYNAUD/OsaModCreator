@@ -106,6 +106,16 @@ export enum UnitType {
   TRANSPORT = 'transport',
 }
 
+export type Province = {
+  id: number;
+  name?: string;
+  red: number;
+  green: number;
+  blue: number;
+  definitionName?: string;
+  definitionX?: string;
+}
+
 export const isLandUnit = (type: UnitType): boolean => {
   switch (type) {
     case UnitType.INFANTRY:
@@ -119,3 +129,18 @@ export const isLandUnit = (type: UnitType): boolean => {
       return false;
   }
 };
+
+export type TradeNode = {
+  location: number;
+  members: number[];
+  end: boolean;
+  inland: boolean;
+  color: number[];
+  outgoing: TradeNodeOutgoing[];
+}
+
+export type TradeNodeOutgoing = {
+  name: string;
+  control: number[];
+  path: number[];
+}

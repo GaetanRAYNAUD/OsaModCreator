@@ -1,16 +1,18 @@
 import { StateContext } from '@components/layout/Default.tsx';
 import { InputProps, InputType } from '@components/layout/form.type.ts';
 import { ModFormLayout } from '@components/layout/ModFormLayout.tsx';
+import { loadTechnologyGroups } from '@eu4/folders.ts';
 import { isLandUnit, Unit, UnitType } from '@eu4/types.ts';
-import { SelectChangeEvent } from '@mui/material';
+import { AutocompleteValue } from '@mui/material/useAutocomplete/useAutocomplete';
 import { getRoutes } from '@routes.ts';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { loadTechnologyGroups } from '@eu4/folders.ts';
 
 export function UnitPage() {
   const navigate = useNavigate();
   const routes = getRoutes();
+  const { t } = useTranslation();
   const { globalState, setGlobalState } = useContext(StateContext)!;
 
   const [name, setName] = useState<string>('');
@@ -115,28 +117,26 @@ export function UnitPage() {
       required: true,
       label: 'input.unit.type',
       value: type,
-      onChange: (event: SelectChangeEvent<UnitType> | undefined) => {
+      onChange: (event: AutocompleteValue<UnitType, false, false, false>) => {
         if (event) {
-          setType(event.target.value as UnitType);
+          setType(event);
         }
       },
       values: Object.values(UnitType),
-      translation: s => `unit.type.${s}`,
+      translation: s => t(`unit.type.${ s }`),
+      keyExtractor: s => s,
     },
     {
       type: InputType.SELECT,
       required: false,
       label: 'input.unit.unitType',
       value: unitType,
-      onChange: (event: SelectChangeEvent<HTMLInputElement> | undefined) => {
-        if (event) {
-          setUnitType(event.target.value as string)
-        } else {
-          setUnitType('');
-        }
+      onChange: (event: AutocompleteValue<string, false, false, false>) => {
+        setUnitType(event ?? '');
       },
       values: Object.keys(globalState?.technologyGroups?.groups ?? {}),
       tooltip: 'input.unit.unitType.tooltip',
+      keyExtractor: s => s,
     },
   ];
 
@@ -263,7 +263,7 @@ export function UnitPage() {
   }
 
   return (
-    <ModFormLayout name={name} handleSubmit={handleSubmit} submitting={submitting} inputs={inputs}
-                   loading={!globalState || !globalState.technologyGroups || name.length === 0} />
+    <ModFormLayout name={ name } handleSubmit={ handleSubmit } submitting={ submitting } inputs={ inputs }
+                   loading={ !globalState || !globalState.technologyGroups || name.length === 0 } />
   );
 }

@@ -343,6 +343,12 @@ i18n.use(initReactI18next).init({
             'primitive': 'Is the group primitive?',
             'nationDesignerUnitType': 'Unit type in nation designer',
             'nationDesignerUnitType.tooltip': 'Unit type when creating a nation with this group in nation designer.',
+          },
+          'trade_node': {
+            'location': 'The province the trade node is located in',
+            'inland': 'Should the trade node use caravans power?',
+            'end': 'Is the trade node an end node?',
+            'members': 'Provinces',
           }
         },
       },

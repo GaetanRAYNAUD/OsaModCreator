@@ -1,4 +1,3 @@
-import { SelectChangeEvent } from '@mui/material';
 import { AutocompleteValue } from '@mui/material/useAutocomplete/useAutocomplete';
 import { ChangeEvent } from 'react';
 
@@ -38,23 +37,30 @@ export type NumberInput = Input & {
 
 export type SelectInput<T> = Input & {
   type: InputType.SELECT,
-  onChange: (event: SelectChangeEvent<T> | undefined) => void,
+  onChange: (event: AutocompleteValue<T, false, false, false>) => void,
   value: T,
   values: T[],
-  translation?: (s: string) => string,
+  translation?: (s: T) => string,
+  keyExtractor: (s: T) => string,
+  optionDisabled?: (s: T) => boolean;
 }
 
 export type MultiSelectInput<T> = Input & {
   type: InputType.MULTI_SELECT,
-  onChange: (event: SelectChangeEvent<T[]>) => void,
+  onChange: (event: AutocompleteValue<T, true, false, false>) => void,
   value: T[],
   values: T[],
+  translation?: (s: T) => string,
+  keyExtractor: (s: T) => string,
+  optionDisabled?: (s: T) => boolean;
 }
 
 export type MultiTextInput<T> = Input & {
   type: InputType.MULTI_TEXT,
   onChange: (value: AutocompleteValue<T, true, false, true>) => void,
   value: T[],
+  translation?: (s: T) => string,
+  keyExtractor: (s: T) => string,
   regex?: RegExp,
 }
 

@@ -1,26 +1,15 @@
 import { ImageInput } from '@components/form/ImageInput.tsx';
+import ListboxComponent from '@components/form/ListboxComponent.tsx';
 import { InputProps, InputType } from '@components/layout/form.type.ts';
 import { ModLayout } from '@components/layout/ModLayout.tsx';
-import { Clear, Help } from '@mui/icons-material';
+import { CheckBox, CheckBoxOutlineBlank, Help } from '@mui/icons-material';
 import {
-  Autocomplete,
-  Box,
-  Button,
-  CardActions,
-  Checkbox,
-  Chip,
-  FormControl,
-  FormControlLabel,
-  Icon,
-  InputAdornment,
-  InputLabel,
-  ListItemText,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  TextField,
-  Tooltip,
+  Autocomplete, Box, Button, CardActions, Checkbox, Chip, FormControlLabel, InputAdornment, TextField, Tooltip,
 } from '@mui/material';
+import {
+  AutocompleteOwnerState, AutocompleteRenderGetTagProps, AutocompleteRenderOptionState,
+} from '@mui/material/Autocomplete/Autocomplete';
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -32,6 +21,10 @@ type Props = {
   loading?: boolean,
 }
 
+const icon = <CheckBoxOutlineBlank fontSize="small" />;
+const checkedIcon = <CheckBox fontSize="small" />;
+
+
 export function ModFormLayout({ name, handleSubmit, submitting = false, inputs, loading = false }: Props) {
   const { t } = useTranslation();
   const [valid, setValid] = useState<boolean>(false);
@@ -42,13 +35,13 @@ export function ModFormLayout({ name, handleSubmit, submitting = false, inputs, 
         case InputType.TEXT: {
           if (input.required && !input.value) {
             setValid(false);
-            console.log(`${input.label} is required`);
+            console.log(`${ input.label } is required`);
             return;
           }
 
           if (input.regex && !input.regex.test(input.value)) {
             setValid(false);
-            console.log(`${input.label} is invalid`);
+            console.log(`${ input.label } is invalid`);
             return;
           }
           break;
@@ -56,7 +49,7 @@ export function ModFormLayout({ name, handleSubmit, submitting = false, inputs, 
         case InputType.SELECT: {
           if (input.required && !input.value) {
             setValid(false);
-            console.log(`${input.label} is required`);
+            console.log(`${ input.label } is required`);
             return;
           }
         }
@@ -64,7 +57,7 @@ export function ModFormLayout({ name, handleSubmit, submitting = false, inputs, 
         case InputType.MULTI_SELECT: {
           if (input.required && (!input.value || input.value.length === 0)) {
             setValid(false);
-            console.log(`${input.label} is required`);
+            console.log(`${ input.label } is required`);
             return;
           }
         }
@@ -72,13 +65,13 @@ export function ModFormLayout({ name, handleSubmit, submitting = false, inputs, 
         case InputType.MULTI_TEXT: {
           if (input.required && (!input.value || input.value.length === 0)) {
             setValid(false);
-            console.log(`${input.label} is required`);
+            console.log(`${ input.label } is required`);
             return;
           }
 
           if (input.regex && input.value.some(v => !input.regex?.test(v))) {
             setValid(false);
-            console.log(`${input.label} is invalid`);
+            console.log(`${ input.label } is invalid`);
             return;
           }
         }
@@ -86,18 +79,19 @@ export function ModFormLayout({ name, handleSubmit, submitting = false, inputs, 
         case InputType.FILE: {
           if (input.required && !input.value) {
             setValid(false);
-            console.log(`${input.label} is required`);
+            console.log(`${ input.label } is required`);
             return;
           }
           break;
         }
-        case InputType.BOOLEAN: {
+        case InputType.BOOLEAN:
+        case InputType.NUMBER:
           if (input.required && !input.value) {
             setValid(false);
-            console.log(`${input.label} is required`);
+            console.log(`${ input.label } is required`);
             return;
           }
-        }
+          break;
       }
     }
 
@@ -105,178 +99,157 @@ export function ModFormLayout({ name, handleSubmit, submitting = false, inputs, 
   }, [inputs]);
 
   return (
-    <ModLayout name={name} loading={loading}>
+    <ModLayout name={ name } loading={ loading }>
       {
         inputs.map((input: InputProps<any>, index: number) => {
           switch (input.type) {
             case InputType.TEXT:
               return (
                 <TextField
-                  key={`${input.label}${index}`}
+                  key={ `${ input.label }${ index }` }
                   fullWidth
-                  label={t(input.label)}
-                  required={input.required}
-                  value={input.value}
-                  onChange={input.onChange}
-                  error={(input.required && !input.value) || (input.regex && !input.regex.test(input.value))}
-                  slotProps={input.tooltip ? {
+                  label={ t(input.label) }
+                  required={ input.required }
+                  value={ input.value }
+                  onChange={ input.onChange }
+                  error={ (input.required && !input.value) || (input.regex && !input.regex.test(input.value)) }
+                  slotProps={ input.tooltip ? {
                     input: {
                       endAdornment: <InputAdornment position="end">
-                        <Tooltip title={t(input.tooltip)}>
+                        <Tooltip title={ t(input.tooltip) }>
                           <Help />
                         </Tooltip>
                       </InputAdornment>,
                     },
-                  } : {}}
+                  } : {} }
                 />
               );
             case InputType.NUMBER:
               return (
                 <TextField
-                  key={`${input.label}${index}`}
+                  key={ `${ input.label }${ index }` }
                   fullWidth
                   type="number"
-                  label={t(input.label)}
-                  required={input.required}
-                  value={input.value}
-                  onChange={input.onChange}
-                  error={input.required && !input.value}
-                  inputProps={{
+                  label={ t(input.label) }
+                  required={ input.required }
+                  value={ input.value }
+                  onChange={ input.onChange }
+                  error={ input.required && !input.value }
+                  inputProps={ {
                     step: input.step,
                     min: input.min,
                     max: input.max,
-                  }}
-                  slotProps={input.tooltip ? {
+                  } }
+                  slotProps={ input.tooltip ? {
                     inputLabel: {
                       shrink: true,
                     },
                     input: {
                       inputMode: 'numeric',
                       endAdornment: <InputAdornment position="end">
-                        <Tooltip title={t(input.tooltip)}>
+                        <Tooltip title={ t(input.tooltip) }>
                           <Help />
                         </Tooltip>
                       </InputAdornment>,
                     },
-                  } : {}}
+                  } : {} }
                 />
               );
             case InputType.SELECT:
-              return (
-                <FormControl fullWidth required={input.required} key={`${input.label}-${index}`}>
-                  <InputLabel id={`label-${input.label}${index}`}>{t(input.label)}</InputLabel>
-                  <Select
-                    labelId={`label-${input.label}${index}`}
-                    id={`select-${input.label}${index}`}
-                    value={input.value}
-                    onChange={input.onChange}
-                    input={<OutlinedInput label={t(input.label)} />}
-                    error={input.required && !input.value}
-                    endAdornment={
-                      input.tooltip || !input.required ? (
-                        <InputAdornment position="end" sx={{ position: 'absolute', right: 32 }}>
-                          {
-                            input.tooltip ? (
-                              <Tooltip title={t(input.tooltip)}>
-                                <Help />
-                              </Tooltip>
-                            ) : (<></>)
-                          }
-                          {
-                            !input.required ? (
-                              <Icon
-                                onClick={() => {
-                                  input.onChange(undefined);
-                                }}
-                                sx={{ cursor: 'pointer' }}
-                              >
-                                <Clear></Clear>
-                              </Icon>
-                            ) : (<></>)
-                          }
-                        </InputAdornment>
-                      ) : (<></>)
-                    }
-                  >
-                    {input.values.map((name) => (
-                      <MenuItem key={name} value={name}>
-                        {input.translation ? t(input.translation(name)) : name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              );
             case InputType.MULTI_SELECT:
-              return (
-                <FormControl fullWidth required={input.required} key={`${input.label}-${index}`}>
-                  <InputLabel id={`label-${input.label}${index}`}>{t(input.label)}</InputLabel>
-                  <Select
-                    labelId={`label-${input.label}${index}`}
-                    id={`select-${input.label}${index}`}
-                    multiple
-                    value={input.value}
-                    onChange={input.onChange}
-                    input={<OutlinedInput label={t(input.label)} />}
-                    error={input.required && (!input.value || input.value.length === 0)}
-                    renderValue={(selected) => (
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip key={value} label={value} />
-                        ))}
-                      </Box>
-                    )}
-                  >
-                    {input.values.map((name) => (
-                      <MenuItem
-                        key={name}
-                        value={name}
-                      >
-                        <Checkbox checked={input.value.includes(name)} size="small" />
-                        <ListItemText primary={name} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              );
-            case InputType.MULTI_TEXT:
+            case InputType.MULTI_TEXT: {
+              let values: any[] = [];
+              let multiple = false;
+              let freeSolo = false;
+              let optionDisable = undefined;
+              let renderOption: ((props: React.HTMLAttributes<HTMLLIElement> & { key: any },
+                                  option: any,
+                                  state: AutocompleteRenderOptionState,
+                                  ownerState: AutocompleteOwnerState<any, boolean, boolean, boolean, React.ElementType>) => React.ReactNode) | undefined =
+                (props, option, { selected }) => {
+                  const { key, ...optionProps } = props;
+                  return (
+                    <li key={ key } { ...optionProps }>
+                      <Checkbox
+                        icon={ icon }
+                        checkedIcon={ checkedIcon }
+                        style={ { marginRight: 8 } }
+                        checked={ selected }
+                      />
+                      { input.translation ? input.translation(option) : option }
+                    </li>
+                  );
+                };
+              let renderTags: ((
+                value: any[],
+                getTagProps: AutocompleteRenderGetTagProps,
+                ownerState: AutocompleteOwnerState<any, boolean, boolean, boolean, React.ElementType>,
+              ) => React.ReactNode) | undefined = (value: string[], getTagProps) =>
+                <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 0.5 } }>
+                  { value.map((value, index) => {
+                    const { key, ...tagProps } = getTagProps({ index });
+
+                    return <Chip key={ key }
+                                 label={ input.translation ? input.translation(value) : value } { ...tagProps } />;
+                  }) }
+                </Box>;
+
+              switch (input.type) {
+                case InputType.SELECT:
+                  values = input.values;
+                  renderOption = undefined;
+                  renderTags = undefined;
+                  optionDisable = input.optionDisabled;
+                  break;
+                case InputType.MULTI_SELECT:
+                  values = input.values;
+                  multiple = true;
+                  optionDisable = input.optionDisabled;
+                  break;
+                case InputType.MULTI_TEXT:
+                  multiple = true;
+                  freeSolo = true;
+                  renderOption = undefined;
+                  break;
+              }
+
               return (
                 <Autocomplete
-                  key={`multi-text-${input.label}`}
-                  multiple
-                  freeSolo
+                  key={ `${ input.type }-${ input.label }` }
                   fullWidth
-                  options={[]}
-                  value={input.value}
-                  onChange={(_, newValue) => {
-                    input.onChange(newValue?.map(v => v?.trim()));
-                  }}
-                  filterSelectedOptions={false}
-                  renderTags={(value: string[], getTagProps) =>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {value.map((value, index) => {
-                        const { key, ...tagProps } = getTagProps({ index });
-
-                        return <Chip key={key} label={value} {...tagProps} />;
-                      })}
-                    </Box>
-                  }
-                  renderInput={(params) => (
+                  disableClearable={ input.required }
+                  multiple={ multiple }
+                  freeSolo={ freeSolo }
+                  options={ values }
+                  value={ input.value }
+                  onChange={ (_, newValue) => {
+                    input.onChange(newValue);
+                  } }
+                  ListboxComponent={ ListboxComponent }
+                  filterSelectedOptions={ false }
+                  getOptionLabel={ input.translation }
+                  getOptionKey={ input.keyExtractor }
+                  renderOption={ renderOption }
+                  renderTags={ renderTags }
+                  getOptionDisabled={ optionDisable }
+                  renderInput={ (params) => (
                     <TextField
-                      {...params}
+                      { ...params }
                       variant="outlined"
-                      label={t(input.label)}
-                      placeholder={t(input.label)}
-                      slotProps={input.tooltip ? {
+                      label={ t(input.label) }
+                      placeholder={ t(input.label) }
+                      slotProps={ input.tooltip ? {
                         input: {
                           ...params.InputProps,
                           endAdornment: (
                             <>
-                              <InputAdornment position="end">
-                                <Tooltip title={t(input.tooltip)}>
+                              <InputAdornment position="end"
+                                              sx={ { position: 'absolute', right: values.length > 0 ? 56 : 28 } }>
+                                <Tooltip title={ t(input.tooltip) }>
                                   <Help />
                                 </Tooltip>
                               </InputAdornment>
-                              {params.InputProps.endAdornment}
+                              { params.InputProps.endAdornment }
                             </>
                           ),
                         },
@@ -284,29 +257,39 @@ export function ModFormLayout({ name, handleSubmit, submitting = false, inputs, 
                         input: {
                           ...params.InputProps,
                         },
-                      }}
+                      } }
                     />
-                  )}
+                  ) }
                 />
               );
+            }
             case InputType.FILE:
               return (
-                <ImageInput key={`file-${input.label}-${index}`} input={input} />
+                <ImageInput key={ `file-${ input.label }-${ index }` } input={ input } />
               );
             case InputType.BOOLEAN:
               return (
-                <FormControlLabel key={`${input.label}${index}`}
-                                  control={<Checkbox checked={input.value} onChange={input.onChange} />}
-                                  label={t(input.label)} required={input.required} />
+                <FormControlLabel key={ `${ input.label }${ index }` }
+                                  control={ <Checkbox checked={ input.value } onChange={ input.onChange } /> }
+                                  required={ input.required }
+                                  label={ <Box component="span" sx={ { display: 'flex', alignItems: 'center' } }>
+                                    { t(input.label) }
+                                    { input.tooltip && (
+                                      <Tooltip title={ t(input.tooltip) }>
+                                        <Help sx={ { marginLeft: 1, fill: 'rgba(0, 0, 0, 0.54)' } } />
+                                      </Tooltip>
+                                    )
+                                    }
+                                  </Box> } />
               );
             default:
               return <></>;
           }
         })
       }
-      <CardActions sx={{ justifyContent: 'center', width: '100%' }}>
-        <Button variant="contained" color="primary" onClick={handleSubmit} loading={submitting} disabled={!valid}>
-          {t('save')}
+      <CardActions sx={ { justifyContent: 'center', width: '100%' } }>
+        <Button variant="contained" color="primary" onClick={ handleSubmit } loading={ submitting } disabled={ !valid }>
+          { t('save') }
         </Button>
       </CardActions>
     </ModLayout>
